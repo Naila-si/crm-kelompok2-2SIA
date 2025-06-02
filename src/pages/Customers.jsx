@@ -90,7 +90,7 @@ const Customers = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="Email (Opsional)"
+            placeholder="Email (Tidak Wajib)"
             className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
           <select
