@@ -4,6 +4,7 @@ import MainLayout from './components/MainLayout'
 import SalesManagement from './pages/SalesManagement'
 import Customers from './pages/Customers'; // atau './pages/Pelanggan'
 import Product from './pages/Product';
+import Product from './pages/Products'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/penjualan" element={<SalesManagement/>} />
         <Route path="/pelanggan" element={<Customers />} />
         <Route path="/produk" element={<Product />} />
+        <Route path="/produk" element={<Product/>} />
       </Route>
     </Routes>
   )
