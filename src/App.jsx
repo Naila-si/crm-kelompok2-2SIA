@@ -3,6 +3,7 @@ import Dashboard from './pages/Dashboard'
 import MainLayout from './components/MainLayout'
 import SalesManagement from './pages/SalesManagement'
 import Customers from './pages/Customers'; // atau './pages/Pelanggan'
+import Product from './pages/Product';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/penjualan" element={<SalesManagement/>} />
         <Route path="/pelanggan" element={<Customers />} />
+        <Route path="/produk" element={<Product />} />
       </Route>
     </Routes>
   )
