@@ -4,6 +4,9 @@ import MainLayout from './components/MainLayout'
 import SalesManagement from './pages/SalesManagement'
 import Customers from './pages/Customers'
 import Product from './pages/Product';
+import Product from './pages/Products'
+import Login from './pages/Login'
+import Register from './pages/Register'
 
 function App() {
   return (
@@ -13,6 +16,9 @@ function App() {
         <Route path="/penjualan" element={<SalesManagement/>} />
         <Route path="/pelanggan" element={<Customers />} />
         <Route path="/produk" element={<Product />} />
+        <Route path="/produk" element={<Product/>} />
+        <Route path="/signin" element={<Login/>} />
+        <Route path="/signup" element={<Register/>} />
       </Route>
     </Routes>
   )
