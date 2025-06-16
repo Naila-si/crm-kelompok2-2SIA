@@ -9,6 +9,8 @@ import {
   Lightbulb,
   LogIn,
   UserPlus,
+  Box, 
+  DollarSign 
 } from "lucide-react";
 
 
@@ -32,12 +34,6 @@ const accountItems = [
   { name: "Produk", icon: <Package />, path: "/produk" },
   { name: "Lacak", icon: <Search />, path: "/lacak" },
   { name: "Lead", icon: <Lightbulb />, path: "/lead", soon: true },
-];
-
-const accountItems = [
-  { name: "Pengaturan Akun", icon: <Settings />, path: "/akun" },
-  { name: "Masuk", icon: <LogIn />, path: "/signin" },
-  { name: "Daftar", icon: <UserPlus />, path: "/signup" },
 ];
 
 const Sidebar = () => {
