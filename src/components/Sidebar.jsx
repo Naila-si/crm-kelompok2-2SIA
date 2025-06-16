@@ -1,15 +1,17 @@
 import {
   LayoutDashboard,
-  Users, // untuk pelanggan
-  ShoppingCart, // untuk penjualan
-  Box, // untuk produk
-  BarChart2, // untuk laporan
-  Settings, // untuk pengaturan akun
+  Users,
+  ShoppingCart,
+  Box,
+  BarChart2,
+  Settings,
   User,
   LogIn,
   UserPlus,
   User2,
   DollarSign,
+  CalendarClock, // Icon untuk Social Media Marketing
+  Megaphone,
 } from "lucide-react";
 
 
@@ -18,20 +20,21 @@ import { Link, useLocation } from "react-router-dom";
 const menuItems = [
   { name: "Dashboard", icon: <LayoutDashboard />, path: "/" },
   { name: "Produk", icon: <Box />, path: "/produk" },
-  // { name: "Laporan", icon: <BarChart2 />, path: "/laporan" },
   { name: "Penjualan", icon: <DollarSign />, path: "/penjualan" },
   { name: "Pelanggan", icon: <Users />, path: "/pelanggan" },
+  { name: "Manajemen Aktivitas", icon: <CalendarClock />, path: "/activity" }, // Baru
+  { name: "Social Media Marketing", icon: <Megaphone />, path: "/social-media" }, // << Tambahan baru
 ];
 
 const accountItems = [
-  // { name: "Pengaturan Akun", icon: <Settings />, path: "/akun" },
   { name: "Sign In", icon: <LogIn />, path: "/signin" },
   { name: "Sign Up", icon: <UserPlus />, path: "/signup" },
 ];
-const Sidebar = () => {
-  const location = useLocation()
 
-  const isActive = (path) => location.pathname === path
+const Sidebar = () => {
+  const location = useLocation();
+
+  const isActive = (path) => location.pathname === path;
 
   return (
     <aside className="bg-white w-64 h-screen shadow-lg px-4 py-6 hidden md:block">
@@ -71,7 +74,7 @@ const Sidebar = () => {
         ))}
       </nav>
     </aside>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

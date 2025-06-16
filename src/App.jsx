@@ -6,6 +6,8 @@ import Customers from './pages/Customers'
 import Product from './pages/Product'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import ActivityManagement from './pages/ActivityManagement';
+import SocialMediaMarketing from './pages/SocialMediaMarketing';
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
         <Route path="/penjualan" element={<SalesManagement />} />
         <Route path="/pelanggan" element={<Customers />} />
         <Route path="/produk" element={<Product />} />
+        <Route path="/activity" element={<ActivityManagement />} />
+        <Route path="/social-media" element={<SocialMediaMarketing />} />
       </Route>
     </Routes>
   )
