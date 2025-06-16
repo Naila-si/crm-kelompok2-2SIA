@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,92 +10,138 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-
 import { Bar, Line } from "react-chartjs-2";
 
 ChartJS.register(
-  CategoryScale, LinearScale, BarElement, LineElement, PointElement, 
-  Title, Tooltip, Legend
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend
 );
-const Dashboard = () => {
-  // Data summary cards
-  const stats = [
-    { label: "Pendapatan Hari Ini", value: "$53,000", percent: "+55%", color: "green" },
-    { label: "Pengguna Hari Ini", value: "2,300", percent: "+3%", color: "blue" },
-    { label: "Klien Baru", value: "+3,462", percent: "-2%", color: "red" },
-    { label: "Penjualan", value: "$103,430", percent: "+5%", color: "purple" },
-  ]
 
-  // Data untuk grafik Penjualan Bulanan (Bar Chart)
+const Dashboard = () => {
+  const stats = [
+    {
+      label: "Pesanan Hari Ini",
+      value: "128",
+      percent: "+15%",
+      color: "bg-[#D7B85B] text-[#1F1F1F]",
+    },
+    {
+      label: "Pendapatan Hari Ini",
+      value: "Rp 3.500.000",
+      percent: "+12%",
+      color: "bg-[#A02B2B] text-white",
+    },
+    {
+      label: "Pelanggan Baru",
+      value: "23",
+      percent: "+5%",
+      color: "bg-[#5E3B1E] text-white",
+    },
+    {
+      label: "Menu Terjual",
+      value: "412",
+      percent: "+9%",
+      color: "bg-[#EEE2C0] text-[#1F1F1F]",
+    },
+  ];
+
   const barData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
     datasets: [
       {
-        label: "Penjualan (dalam ribuan $)",
-        data: [12, 19, 14, 17, 22, 30, 28, 26, 32, 35, 40, 45],
-        backgroundColor: "rgba(99, 102, 241, 0.7)", // purple-600
+        label: "Jumlah Pesanan",
+        data: [240, 320, 400, 420, 500, 620, 710, 780, 860, 930, 1000, 1120],
+        backgroundColor: "#A02B2B", // Merah marun
+        borderRadius: 6,
       },
     ],
-  }
+  };
 
   const barOptions = {
     responsive: true,
     plugins: {
-      legend: { position: 'top' },
-      title: { display: true, text: 'Penjualan Bulanan Tahun Ini' },
+      legend: { position: "top" },
+      title: {
+        display: true,
+        text: "Jumlah Pesanan per Bulan",
+        font: { size: 16, weight: "bold" },
+        color: "#1F1F1F",
+      },
     },
-  }
+    maintainAspectRatio: false,
+  };
 
-  // Data untuk grafik Pertumbuhan Pelanggan (Line Chart)
   const lineData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
     datasets: [
       {
         label: "Jumlah Pelanggan",
-        data: [50, 75, 120, 180, 220, 260, 300, 350, 400, 430, 460, 500],
-        borderColor: "rgba(59, 130, 246, 1)", // blue-500
-        backgroundColor: "rgba(59, 130, 246, 0.3)",
+        data: [120, 150, 180, 220, 250, 300, 360, 400, 430, 470, 520, 580],
+        borderColor: "#5E3B1E", // Coklat
+        backgroundColor: "rgba(94, 59, 30, 0.2)", // Coklat transparan
         fill: true,
-        tension: 0.3,
+        tension: 0.4,
         pointRadius: 4,
+        pointBackgroundColor: "#5E3B1E",
       },
     ],
-  }
+  };
 
   const lineOptions = {
     responsive: true,
     plugins: {
-      legend: { position: 'top' },
-      title: { display: true, text: 'Pertumbuhan Pelanggan Tahun Ini' },
+      legend: { position: "top" },
+      title: {
+        display: true,
+        text: "Pertumbuhan Pelanggan Tahun Ini",
+        font: { size: 16, weight: "bold" },
+        color: "#1F1F1F",
+      },
     },
-  }
+    maintainAspectRatio: false,
+  };
 
   return (
-    <div className="p-6 space-y-8">
-      {/* Statistik utama */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map(({ label, value, percent, color }) => (
-          <div key={label} className="bg-white rounded-xl shadow p-5">
-            <p className="text-sm text-gray-500">{label}</p>
-            <h2 className={`text-2xl font-bold text-${color}-600 flex items-center gap-2`}>
-              {value}
-              <span className={`text-xs font-semibold text-${color}-500`}>{percent}</span>
-            </h2>
+    <div className="p-6 bg-[#FDF6E3] min-h-screen">
+      <div className="text-3xl font-bold text-center mb-6 text-[#1F1F1F]">
+        Dashboard Selera Kampung
+      </div>
+
+      {/* Statistik */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {stats.map((stat, index) => (
+          <div
+            key={index}
+            className={`rounded-xl shadow p-5 ${stat.color}`}
+          >
+            <p className="text-sm font-semibold">{stat.label}</p>
+            <div className="flex items-center justify-between mt-2">
+              <h2 className="text-xl font-bold">{stat.value}</h2>
+              <span className="text-xs bg-white/70 px-2 py-0.5 rounded font-semibold">
+                {stat.percent}
+              </span>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Grafik Penjualan Bulanan */}
-      <div className="bg-white rounded-xl shadow p-6">
-        <Bar options={barOptions} data={barData} />
-      </div>
-
-      {/* Grafik Pertumbuhan Pelanggan */}
-      <div className="bg-white rounded-xl shadow p-6">
-        <Line options={lineOptions} data={lineData} />
+      {/* Grafik sejajar kanan */}
+      <div className="flex flex-col lg:flex-row justify-end gap-6">
+        <div className="bg-white rounded-xl shadow p-4 h-[300px] w-full lg:w-1/2">
+          <Bar options={barOptions} data={barData} />
+        </div>
+        <div className="bg-white rounded-xl shadow p-4 h-[300px] w-full lg:w-1/2">
+          <Line options={lineOptions} data={lineData} />
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

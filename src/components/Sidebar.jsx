@@ -1,15 +1,14 @@
 import {
   LayoutDashboard,
-  Users, // untuk pelanggan
-  ShoppingCart, // untuk penjualan
-  Box, // untuk produk
-  BarChart2, // untuk laporan
-  Settings, // untuk pengaturan akun
-  User,
+  ClipboardList,
+  CalendarCheck,
+  Users,
+  Settings,
+  Package,
+  Search,
+  Lightbulb,
   LogIn,
   UserPlus,
-  User2,
-  DollarSign,
 } from "lucide-react";
 
 
@@ -27,42 +26,69 @@ const accountItems = [
   // { name: "Pengaturan Akun", icon: <Settings />, path: "/akun" },
   { name: "Sign In", icon: <LogIn />, path: "/signin" },
   { name: "Sign Up", icon: <UserPlus />, path: "/signup" },
+  { name: "Pesanan", icon: <ClipboardList />, path: "/pesanan" },
+  { name: "Aktivitas", icon: <CalendarCheck />, path: "/aktivitas" },
+  { name: "Kontak", icon: <Users />, path: "/kontak" },
+  { name: "Produk", icon: <Package />, path: "/produk" },
+  { name: "Lacak", icon: <Search />, path: "/lacak" },
+  { name: "Lead", icon: <Lightbulb />, path: "/lead", soon: true },
 ];
-const Sidebar = () => {
-  const location = useLocation()
 
-  const isActive = (path) => location.pathname === path
+const accountItems = [
+  { name: "Pengaturan Akun", icon: <Settings />, path: "/akun" },
+  { name: "Masuk", icon: <LogIn />, path: "/signin" },
+  { name: "Daftar", icon: <UserPlus />, path: "/signup" },
+];
+
+const Sidebar = () => {
+  const location = useLocation();
+
+  const isActive = (path) => location.pathname === path;
 
   return (
-    <aside className="bg-white w-64 h-screen shadow-lg px-4 py-6 hidden md:block">
-      <div className="text-xl font-bold mb-8 text-purple-700">UMKM CRM</div>
+    <aside className="bg-[#FDF6E3] w-64 h-screen shadow-lg px-4 py-6 hidden md:block">
+      {/* Logo Selera Kampung */}
+      <div className="flex justify-center items-center mb-4">
+        <img
+          src="https://img.mbizmarket.co.id/company/thumbs/343x343/2022/10/18/276eec9fcac3d3767af9c010ad6340bb.jpg"
+          alt="Logo Selera Kampung"
+          className="w-40 h-auto object-contain"
+        />
+      </div>
+
+      <div className="text-sm font-semibold text-[#5E3B1E] mb-3 px-1">FITUR</div>
       <nav className="space-y-1">
         {menuItems.map((item) => (
           <Link
             key={item.name}
             to={item.path}
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-purple-100 transition ${
+            className={`flex items-center justify-between px-3 py-2 rounded-lg transition ${
               isActive(item.path)
-                ? 'bg-purple-200 text-purple-800 font-semibold'
-                : 'text-gray-700'
+                ? "bg-[#A02B2B] text-white font-semibold"
+                : "text-[#1F1F1F] hover:bg-[#D7B85B] hover:text-[#5E3B1E]"
             }`}
           >
-            <span className="w-5 h-5">{item.icon}</span>
-            {item.name}
+            <div className="flex items-center gap-3">
+              <span className="w-5 h-5">{item.icon}</span>
+              {item.name}
+            </div>
+            {item.soon && (
+              <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-md">Segera</span>
+            )}
           </Link>
         ))}
       </nav>
 
-      <div className="mt-8 text-xs font-semibold text-gray-500">AKUN</div>
+      <div className="mt-8 text-xs font-semibold text-[#5E3B1E] px-1">AKUN</div>
       <nav className="mt-2 space-y-1">
         {accountItems.map((item) => (
           <Link
             key={item.name}
             to={item.path}
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-purple-100 transition ${
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition ${
               isActive(item.path)
-                ? 'bg-purple-200 text-purple-800 font-semibold'
-                : 'text-gray-700'
+                ? "bg-[#A02B2B] text-white font-semibold"
+                : "text-[#1F1F1F] hover:bg-[#D7B85B] hover:text-[#5E3B1E]"
             }`}
           >
             <span className="w-5 h-5">{item.icon}</span>
@@ -71,7 +97,7 @@ const Sidebar = () => {
         ))}
       </nav>
     </aside>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;
