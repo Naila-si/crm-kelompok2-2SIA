@@ -8,6 +8,8 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Produk from './pages/Produk'
 import Lacak from './pages/Lacak'
+import ActivityManagement from './pages/ActivityManagement';
+import SocialMediaMarketing from './pages/SocialMediaMarketing';
 
 function App() {
   return (
@@ -27,6 +29,9 @@ function App() {
         <Route path="/signup" element={<Register/>} />
          <Route path="/Produk" element={<Produk/>} />
          <Route path="/lacak" element={<Lacak/>} />
+        <Route path="/produk" element={<Product />} />
+        <Route path="/activity" element={<ActivityManagement />} />
+        <Route path="/social-media" element={<SocialMediaMarketing />} />
       </Route>
     </Routes>
   )

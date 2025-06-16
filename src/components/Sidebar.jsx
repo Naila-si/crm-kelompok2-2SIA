@@ -9,6 +9,18 @@ import {
   Lightbulb,
   LogIn,
   UserPlus,
+  Users,
+  ShoppingCart,
+  Box,
+  BarChart2,
+  Settings,
+  User,
+  LogIn,
+  UserPlus,
+  User2,
+  DollarSign,
+  CalendarClock, // Icon untuk Social Media Marketing
+  Megaphone,
 } from "lucide-react";
 
 import { Link, useLocation } from "react-router-dom";
@@ -27,6 +39,16 @@ const accountItems = [
   { name: "Pengaturan Akun", icon: <Settings />, path: "/akun" },
   { name: "Masuk", icon: <LogIn />, path: "/signin" },
   { name: "Daftar", icon: <UserPlus />, path: "/signup" },
+  { name: "Produk", icon: <Box />, path: "/produk" },
+  { name: "Penjualan", icon: <DollarSign />, path: "/penjualan" },
+  { name: "Pelanggan", icon: <Users />, path: "/pelanggan" },
+  { name: "Manajemen Aktivitas", icon: <CalendarClock />, path: "/activity" }, // Baru
+  { name: "Social Media Marketing", icon: <Megaphone />, path: "/social-media" }, // << Tambahan baru
+];
+
+const accountItems = [
+  { name: "Sign In", icon: <LogIn />, path: "/signin" },
+  { name: "Sign Up", icon: <UserPlus />, path: "/signup" },
 ];
 
 const Sidebar = () => {
