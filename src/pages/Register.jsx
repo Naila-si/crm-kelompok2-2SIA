@@ -21,7 +21,7 @@ function Register() {
     }
     // Simulasi register: bisa disimpan ke localStorage atau ke backend
     alert("Pendaftaran berhasil! Silakan login.");
-    navigate("/login");
+    navigate("/");
   };
 
   return (

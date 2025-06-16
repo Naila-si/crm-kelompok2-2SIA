@@ -24,8 +24,7 @@ import { Link, useLocation } from "react-router-dom";
 const menuItems = [
   { name: "Dashboard", icon: <LayoutDashboard />, path: "/" },
   { name: "Pesanan", icon: <ClipboardList />, path: "/pesanan" },
-  { name: "Aktivitas", icon: <CalendarCheck />, path: "/aktivitas" },
-  { name: "Kontak", icon: <Users />, path: "/kontak" },
+  { name: "Riwayat", icon: <Users />, path: "/riwayat" },
   { name: "Produk", icon: <Package />, path: "/produk" },
   { name: "Lacak", icon: <Search />, path: "/lacak" },
   { name: "Lead", icon: <Lightbulb />, path: "/lead", soon: true },
@@ -35,7 +34,6 @@ const menuItems = [
 
 const accountItems = [
   { name: "Pengaturan Akun", icon: <Settings />, path: "/akun" },
-  { name: "Masuk", icon: <LogIn />, path: "/signin" },
   { name: "Daftar", icon: <UserPlus />, path: "/signup" },
   { name: "Pelanggan", icon: <Users />, path: "/pelanggan" },
 ];
@@ -50,7 +48,7 @@ const Sidebar = () => {
       {/* Logo Selera Kampung */}
       <div className="flex justify-center items-center mb-4">
         <img
-          src="https://img.mbizmarket.co.id/company/thumbs/343x343/2022/10/18/276eec9fcac3d3767af9c010ad6340bb.jpg"
+          src="/public/logo.png"
           alt="Logo Selera Kampung"
           className="w-40 h-auto object-contain"
         />

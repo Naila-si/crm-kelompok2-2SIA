@@ -10,13 +10,15 @@ import Produk from './pages/Produk';
 import Lacak from './pages/Lacak';
 import ActivityManagement from './pages/ActivityManagement';
 import SocialMediaMarketing from './pages/SocialMediaMarketing';
+import Riwayat from './pages/Riwayat';
+import Akun from './pages/Akun';
 
 function App() {
   return (
     <Routes>
       {/* Routes tanpa layout */}
       <Route path="/signin" element={<Login />} />
-      <Route path="/signup" element={<Register />} />
+      <Route path="/register" element={<Register />} />
 
       {/* Routes dengan layout */}
       <Route element={<MainLayout />}>
@@ -24,11 +26,13 @@ function App() {
         <Route path="/penjualan" element={<SalesManagement />} />
         <Route path="/pelanggan" element={<Customers />} />
         <Route path="/pesanan" element={<Pesanan />} />
+        <Route path="/riwayat" element={<Riwayat />} />
         <Route path="/produk" element={<Produk />} />
         <Route path="/lacak" element={<Lacak />} />
         <Route path="/activity" element={<ActivityManagement />} />
         <Route path="/activity-management" element={<ActivityManagement />} />
         <Route path="/social-media" element={<SocialMediaMarketing />} />
+        <Route path="/akun" element={<Akun />} />
       </Route>
     </Routes>
   );

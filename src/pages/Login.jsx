@@ -10,10 +10,11 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Simulasi login, bisa diganti cek API / localStorage
-    if (form.email === "admin@example.com" && form.password === "admin123") {
+
+    // Login hanya jika cocok dengan email dan password ini
+    if (form.email === "admin@selera.id" && form.password === "12345678") {
       alert("Login berhasil!");
-      navigate("/product");
+      navigate("/");
     } else {
       alert("Email atau password salah!");
     }
@@ -28,8 +29,20 @@ function Login() {
         <h2 className="text-2xl font-bold text-[#8B4513] mb-6 text-center">
           Login Catering
         </h2>
-        <InputField label="Email" name="email" type="email" value={form.email} onChange={handleChange} />
-        <InputField label="Password" name="password" type="password" value={form.password} onChange={handleChange} />
+        <InputField
+          label="Email"
+          name="email"
+          type="email"
+          value={form.email}
+          onChange={handleChange}
+        />
+        <InputField
+          label="Password"
+          name="password"
+          type="password"
+          value={form.password}
+          onChange={handleChange}
+        />
         <button
           type="submit"
           className="w-full bg-[#8B4513] text-white py-2 rounded hover:bg-[#A0522D] transition"
