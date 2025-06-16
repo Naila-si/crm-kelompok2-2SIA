@@ -3,7 +3,6 @@ import Dashboard from './pages/Dashboard'
 import MainLayout from './components/MainLayout'
 import SalesManagement from './pages/SalesManagement'
 import Customers from './pages/Customers'
-import Product from './pages/Product'
 import Pesanan from './pages/Pesanan'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -22,7 +21,6 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/penjualan" element={<SalesManagement />} />
         <Route path="/pelanggan" element={<Customers />} />
-        <Route path="/produk" element={<Product />} />
         <Route path="/penjualan" element={<SalesManagement/>} />
         <Route path="/Pesanan" element={<Pesanan/>} />
         <Route path="/signin" element={<Login/>} />

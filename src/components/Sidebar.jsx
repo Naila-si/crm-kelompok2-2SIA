@@ -9,31 +9,24 @@ import {
   Lightbulb,
   LogIn,
   UserPlus,
-  Box, 
-  DollarSign 
 } from "lucide-react";
-
 
 import { Link, useLocation } from "react-router-dom";
 
 const menuItems = [
   { name: "Dashboard", icon: <LayoutDashboard />, path: "/" },
-  { name: "Produk", icon: <Box />, path: "/produk" },
-  // { name: "Laporan", icon: <BarChart2 />, path: "/laporan" },
-  { name: "Penjualan", icon: <DollarSign />, path: "/penjualan" },
-  { name: "Pelanggan", icon: <Users />, path: "/pelanggan" },
-];
-
-const accountItems = [
-  // { name: "Pengaturan Akun", icon: <Settings />, path: "/akun" },
-  { name: "Sign In", icon: <LogIn />, path: "/signin" },
-  { name: "Sign Up", icon: <UserPlus />, path: "/signup" },
   { name: "Pesanan", icon: <ClipboardList />, path: "/pesanan" },
   { name: "Aktivitas", icon: <CalendarCheck />, path: "/aktivitas" },
   { name: "Kontak", icon: <Users />, path: "/kontak" },
   { name: "Produk", icon: <Package />, path: "/produk" },
   { name: "Lacak", icon: <Search />, path: "/lacak" },
   { name: "Lead", icon: <Lightbulb />, path: "/lead", soon: true },
+];
+
+const accountItems = [
+  { name: "Pengaturan Akun", icon: <Settings />, path: "/akun" },
+  { name: "Masuk", icon: <LogIn />, path: "/signin" },
+  { name: "Daftar", icon: <UserPlus />, path: "/signup" },
 ];
 
 const Sidebar = () => {
