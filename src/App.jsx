@@ -1,21 +1,15 @@
-import { Routes, Route } from 'react-router-dom'
-import Dashboard from './pages/Dashboard'
-import MainLayout from './components/MainLayout'
-import SalesManagement from './pages/SalesManagement'
-import Customers from './pages/Customers'
-import Pesanan from './pages/Pesanan'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Produk from './pages/Produk'
-import Lacak from './pages/Lacak'
-import ActivityManagement from './pages/ActivityManagement';
-import SocialMediaMarketing from './pages/SocialMediaMarketing';
 import { Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import MainLayout from './components/MainLayout';
+import SalesManagement from './pages/SalesManagement';
 import Customers from './pages/Customers';
+import Pesanan from './pages/Pesanan';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Produk from './pages/Produk';
+import Lacak from './pages/Lacak';
 import ActivityManagement from './pages/ActivityManagement';
-import SosialMediaMarketing from './pages/SosialMediaMarketing';
+import SocialMediaMarketing from './pages/SocialMediaMarketing';
 
 function App() {
   return (
@@ -29,20 +23,15 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/penjualan" element={<SalesManagement />} />
         <Route path="/pelanggan" element={<Customers />} />
-        <Route path="/penjualan" element={<SalesManagement/>} />
-        <Route path="/Pesanan" element={<Pesanan/>} />
-        <Route path="/signin" element={<Login/>} />
-        <Route path="/signup" element={<Register/>} />
-         <Route path="/Produk" element={<Produk/>} />
-         <Route path="/lacak" element={<Lacak/>} />
-        <Route path="/produk" element={<Product />} />
+        <Route path="/pesanan" element={<Pesanan />} />
+        <Route path="/produk" element={<Produk />} />
+        <Route path="/lacak" element={<Lacak />} />
         <Route path="/activity" element={<ActivityManagement />} />
-        <Route path="/social-media" element={<SocialMediaMarketing />} />
         <Route path="/activity-management" element={<ActivityManagement />} />
-        <Route path="/social-media" element={<SosialMediaMarketing />} />
+        <Route path="/social-media" element={<SocialMediaMarketing />} />
       </Route>
     </Routes>
   );
 }
 
-export default App; 
+export default App;

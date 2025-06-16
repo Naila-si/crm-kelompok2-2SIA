@@ -29,17 +29,15 @@ const menuItems = [
   { name: "Produk", icon: <Package />, path: "/produk" },
   { name: "Lacak", icon: <Search />, path: "/lacak" },
   { name: "Lead", icon: <Lightbulb />, path: "/lead", soon: true },
+  { name: "Manajemen Aktivitas", icon: <CalendarClock />, path: "/activity" },
+  { name: "Social Media Marketing", icon: <Megaphone />, path: "/social-media" },
 ];
 
 const accountItems = [
   { name: "Pengaturan Akun", icon: <Settings />, path: "/akun" },
   { name: "Masuk", icon: <LogIn />, path: "/signin" },
   { name: "Daftar", icon: <UserPlus />, path: "/signup" },
-  { name: "Produk", icon: <Box />, path: "/produk" },
-  { name: "Penjualan", icon: <DollarSign />, path: "/penjualan" },
   { name: "Pelanggan", icon: <Users />, path: "/pelanggan" },
-  { name: "Manajemen Aktivitas", icon: <CalendarClock />, path: "/activity" },
-  { name: "Social Media Marketing", icon: <Megaphone />, path: "/social-media" },
 ];
 
 const Sidebar = () => {
@@ -48,11 +46,17 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <aside className="bg-white w-64 h-screen shadow-xl px-4 py-6 hidden md:block border-r border-orange-100">
-      <div className="text-2xl font-bold mb-10 text-orange-800 font-serif tracking-wide">
-        UMKM CRM
+<aside className="bg-[#FDF6E3] w-64 h-screen shadow-lg px-4 py-6 hidden md:block">
+      {/* Logo Selera Kampung */}
+      <div className="flex justify-center items-center mb-4">
+        <img
+          src="https://img.mbizmarket.co.id/company/thumbs/343x343/2022/10/18/276eec9fcac3d3767af9c010ad6340bb.jpg"
+          alt="Logo Selera Kampung"
+          className="w-40 h-auto object-contain"
+        />
       </div>
 
+      <div className="text-sm font-semibold text-[#5E3B1E] mb-3 px-1">FITUR</div>
       <nav className="space-y-1">
         {menuItems.map((item) => (
           <Link
