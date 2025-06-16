@@ -10,6 +10,12 @@ import Produk from './pages/Produk'
 import Lacak from './pages/Lacak'
 import ActivityManagement from './pages/ActivityManagement';
 import SocialMediaMarketing from './pages/SocialMediaMarketing';
+import { Routes, Route } from 'react-router-dom';
+import Dashboard from './pages/Dashboard';
+import MainLayout from './components/MainLayout';
+import Customers from './pages/Customers';
+import ActivityManagement from './pages/ActivityManagement';
+import SosialMediaMarketing from './pages/SosialMediaMarketing';
 
 function App() {
   return (
@@ -32,9 +38,11 @@ function App() {
         <Route path="/produk" element={<Product />} />
         <Route path="/activity" element={<ActivityManagement />} />
         <Route path="/social-media" element={<SocialMediaMarketing />} />
+        <Route path="/activity-management" element={<ActivityManagement />} />
+        <Route path="/social-media" element={<SosialMediaMarketing />} />
       </Route>
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App; 

@@ -9,18 +9,14 @@ import {
   Lightbulb,
   LogIn,
   UserPlus,
-  Users,
   ShoppingCart,
   Box,
   BarChart2,
-  Settings,
   User,
-  LogIn,
-  UserPlus,
-  User2,
   DollarSign,
-  CalendarClock, // Icon untuk Social Media Marketing
+  CalendarClock,
   Megaphone,
+  User2,
 } from "lucide-react";
 
 import { Link, useLocation } from "react-router-dom";
@@ -42,13 +38,8 @@ const accountItems = [
   { name: "Produk", icon: <Box />, path: "/produk" },
   { name: "Penjualan", icon: <DollarSign />, path: "/penjualan" },
   { name: "Pelanggan", icon: <Users />, path: "/pelanggan" },
-  { name: "Manajemen Aktivitas", icon: <CalendarClock />, path: "/activity" }, // Baru
-  { name: "Social Media Marketing", icon: <Megaphone />, path: "/social-media" }, // << Tambahan baru
-];
-
-const accountItems = [
-  { name: "Sign In", icon: <LogIn />, path: "/signin" },
-  { name: "Sign Up", icon: <UserPlus />, path: "/signup" },
+  { name: "Manajemen Aktivitas", icon: <CalendarClock />, path: "/activity" },
+  { name: "Social Media Marketing", icon: <Megaphone />, path: "/social-media" },
 ];
 
 const Sidebar = () => {
@@ -57,26 +48,20 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <aside className="bg-[#FDF6E3] w-64 h-screen shadow-lg px-4 py-6 hidden md:block">
-      {/* Logo Selera Kampung */}
-      <div className="flex justify-center items-center mb-4">
-        <img
-          src="https://img.mbizmarket.co.id/company/thumbs/343x343/2022/10/18/276eec9fcac3d3767af9c010ad6340bb.jpg"
-          alt="Logo Selera Kampung"
-          className="w-40 h-auto object-contain"
-        />
+    <aside className="bg-white w-64 h-screen shadow-xl px-4 py-6 hidden md:block border-r border-orange-100">
+      <div className="text-2xl font-bold mb-10 text-orange-800 font-serif tracking-wide">
+        UMKM CRM
       </div>
 
-      <div className="text-sm font-semibold text-[#5E3B1E] mb-3 px-1">FITUR</div>
       <nav className="space-y-1">
         {menuItems.map((item) => (
           <Link
             key={item.name}
             to={item.path}
-            className={`flex items-center justify-between px-3 py-2 rounded-lg transition ${
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-orange-100 transition ${
               isActive(item.path)
-                ? "bg-[#A02B2B] text-white font-semibold"
-                : "text-[#1F1F1F] hover:bg-[#D7B85B] hover:text-[#5E3B1E]"
+                ? "bg-orange-200 text-orange-900 font-semibold"
+                : "text-gray-700"
             }`}
           >
             <div className="flex items-center gap-3">
@@ -90,16 +75,19 @@ const Sidebar = () => {
         ))}
       </nav>
 
-      <div className="mt-8 text-xs font-semibold text-[#5E3B1E] px-1">AKUN</div>
+      <div className="mt-10 text-xs font-semibold text-gray-500 uppercase tracking-widest">
+        Akun
+      </div>
+
       <nav className="mt-2 space-y-1">
         {accountItems.map((item) => (
           <Link
             key={item.name}
             to={item.path}
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition ${
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-orange-100 transition ${
               isActive(item.path)
-                ? "bg-[#A02B2B] text-white font-semibold"
-                : "text-[#1F1F1F] hover:bg-[#D7B85B] hover:text-[#5E3B1E]"
+                ? "bg-orange-200 text-orange-900 font-semibold"
+                : "text-gray-700"
             }`}
           >
             <span className="w-5 h-5">{item.icon}</span>
