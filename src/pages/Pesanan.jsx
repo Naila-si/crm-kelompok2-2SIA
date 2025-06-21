@@ -1,40 +1,52 @@
 import React, { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 function Product() {
   const [orders, setOrders] = useState([]);
   const [form, setForm] = useState({
-    pelanggan_id: "",
-    nama_pelanggan: "",
-    tanggal_pemesanan: "",
-    tanggal_acara: "",
-    jenis_menu: "",
-    daftar_menu: "",
-    jumlah_porsi: "",
-    lokasi_pengiriman: "",
-    catatan: "",
-    status: "Proses",
-  });
+      pelanggan_id: "",
+      nama_pelanggan: "",
+      tanggal_pemesanan: "",
+      tanggal_acara: "",
+      jenis_menu: "",
+      daftar_menu: "",
+      jumlah_porsi: "",
+      lokasi_pengiriman: "",
+      catatan: "",
+      status: "Proses",
+    });
   const [editId, setEditId] = useState(null);
 
-  useEffect(() => {
-    fetch("/data.json")
-      .then((res) => res.json())
-      .then((data) => setOrders(data))
-      .catch((err) => console.error("Gagal load data.json", err));
-  }, []);
+ useEffect(() => {
+  fetch("https://api.npoint.io/9658db68dc5a6df45ed3")
+    .then((res) => res.json())
+    .then((data) => {
+      setOrders(data);
+      localStorage.setItem("orders", JSON.stringify(data)); // simpan di localStorage
+    });
+}, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("Submit form, editId:", editId);
+
     if (editId) {
       const updated = orders.map((o) =>
         o.id === editId ? { ...form, id: editId } : o
       );
       setOrders(updated);
+      localStorage.setItem("orders", JSON.stringify(updated));
+      toast.success("Pesanan berhasil diperbarui!");
       setEditId(null);
     } else {
       const newId = orders.length ? Math.max(...orders.map((o) => o.id)) + 1 : 1;
-      setOrders([...orders, { ...form, id: newId }]);
+      const newOrder = { ...form, id: newId };
+      const newOrders = [...orders, newOrder];
+      setOrders(newOrders);
+      localStorage.setItem("orders", JSON.stringify(newOrders));
+      toast.success("Pesanan baru berhasil ditambahkan!");
     }
+
     setForm({
       pelanggan_id: "",
       nama_pelanggan: "",
@@ -50,52 +62,72 @@ function Product() {
   };
 
   const handleEdit = (order) => {
-    setForm(order);
+    console.log("Edit data:", order); // untuk cek
+    setForm({
+      pelanggan_id: order.pelanggan_id || "",
+      nama_pelanggan: order.nama_pelanggan || "",
+      tanggal_pemesanan: order.tanggal_pemesanan || "",
+      tanggal_acara: order.tanggal_acara || "",
+      jenis_menu: order.jenis_menu || "",
+      daftar_menu: order.daftar_menu || "",
+      jumlah_porsi: order.jumlah_porsi || "",
+      lokasi_pengiriman: order.lokasi_pengiriman || "",
+      catatan: order.catatan || "",
+      status: order.status || "Proses",
+    });
     setEditId(order.id);
   };
 
   const handleDelete = (id) => {
-    const filtered = orders.filter((o) => o.id !== id);
-    setOrders(filtered);
-    if (editId === id) {
-      setEditId(null);
-      setForm({
-        pelanggan_id: "",
-        nama_pelanggan: "",
-        tanggal_pemesanan: "",
-        tanggal_acara: "",
-        jenis_menu: "",
-        daftar_menu: "",
-        jumlah_porsi: "",
-        lokasi_pengiriman: "",
-        catatan: "",
-        status: "Proses",
-      });
+    const order = orders.find((o) => o.id === id);
+    const konfirmasi = window.confirm(`Yakin ingin menghapus pesanan dari ${order?.nama_pelanggan}?`);
+
+    if (konfirmasi) {
+      const filtered = orders.filter((o) => o.id !== id);
+      setOrders(filtered);
+      localStorage.setItem("orders", JSON.stringify(filtered));
+      toast.success("Pesanan berhasil dihapus!");
+      
+      if (editId === id) {
+        setEditId(null);
+        setForm({
+          pelanggan_id: "",
+          nama_pelanggan: "",
+          tanggal_pemesanan: "",
+          tanggal_acara: "",
+          jenis_menu: "",
+          daftar_menu: "",
+          jumlah_porsi: "",
+          lokasi_pengiriman: "",
+          catatan: "",
+          status: "Proses",
+        });
+      }
     }
   };
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center flex flex-col items-center py-12 px-6"
+      className="min-h-screen bg-cover bg-center flex flex-col items-center pt-0 px-6 pb-12"
       style={{ backgroundImage: 'url("/background.jpg")' }}
     >
-      <div className="bg-white bg-opacity-95 rounded-xl shadow-2xl max-w-7xl w-full p-12">
+      <div className="bg-white bg-opacity-95 rounded-xl shadow-lg max-w-4xl w-full p-6">
         {/* Header */}
         <header className="mb-12 text-center">
-          <h1 className="text-5xl font-bold text-[#8B4513] drop-shadow-md mb-3 font-serif">
+          <h1 className="text-4xl font-bold text-[#8B4513] drop-shadow-md mb-2 font-serif">
             Selera Kampung Pekanbaru
           </h1>
-          <h2 className="text-3xl font-semibold text-[#D2691E] italic mb-2 font-serif">
+          <h2 className="text-2xl font-semibold text-[#D2691E] italic mb-2 font-serif">
             Catering Lezat & Elegan
           </h2>
-          <p className="text-lg text-[#A0522D]">
+          <p className="text-md text-[#A0522D]">
             Solusi Pesan Makanan Catering Berkualitas untuk Acara Spesial Anda
           </p>
         </header>
 
         {/* Form Pemesanan */}
         <section className="mb-14">
-          <h2 className="text-3xl font-semibold text-[#D2691E] mb-6 border-b-4 border-[#CD853F] inline-block pb-1 font-serif">
+          <h2 className="text-2xl font-semibold text-[#D2691E] mb-4 border-b-4 border-[#CD853F] inline-block pb-1 font-serif">
             {editId ? "Edit" : "Tambah"} Pesanan Catering
           </h2>
           <form
@@ -201,7 +233,7 @@ function Product() {
           </h3>
           <div className="overflow-x-auto rounded-lg shadow-lg">
             <table className="min-w-full bg-white rounded-lg overflow-hidden">
-              <thead className="bg-[#FFE4B5] text-[#8B4513] uppercase text-sm font-semibold tracking-wide">
+              <thead className="bg-[#FFE4B5] text-[#8B4513] uppercase text-xs font-semibold tracking-wide">
                 <tr>
                   <th className="px-4 py-3 border border-[#DEB887]">ID</th>
                   <th className="px-4 py-3 border border-[#DEB887]">ID Pelanggan</th>
@@ -217,7 +249,7 @@ function Product() {
                   <th className="px-4 py-3 border border-[#DEB887] text-center">Aksi</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="text-sm">
                 {orders.map((o) => (
                   <tr
                     key={o.id}
@@ -252,14 +284,7 @@ function Product() {
                         Edit
                       </button>
                       <button
-                        onClick={() => {
-                          if (
-                            window.confirm(
-                              `Hapus pesanan dari ${o.nama_pelanggan} ?`
-                            )
-                          )
-                            handleDelete(o.id);
-                        }}
+                        onClick={() => handleDelete(o.id)}
                         className="text-red-600 hover:text-red-800 font-semibold"
                       >
                         Hapus

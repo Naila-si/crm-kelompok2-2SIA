@@ -18,14 +18,14 @@ import {
   Megaphone,
   User2,
 } from "lucide-react";
-
+import { MdRestaurantMenu } from "react-icons/md"; 
 import { Link, useLocation } from "react-router-dom";
 
 const menuItems = [
   { name: "Dashboard", icon: <LayoutDashboard />, path: "/" },
   { name: "Pesanan", icon: <ClipboardList />, path: "/pesanan" },
-  { name: "Riwayat", icon: <Users />, path: "/riwayat" },
-  { name: "Produk", icon: <Package />, path: "/produk" },
+  { name: "Kontak Pelanggan", icon: <Users />, path: "/kontak" },
+  { name: "Menu", icon: <MdRestaurantMenu />, path: "/menu" },
   { name: "Lacak", icon: <Search />, path: "/lacak" },
   { name: "Lead", icon: <Lightbulb />, path: "/lead", soon: true },
   { name: "Manajemen Aktivitas", icon: <CalendarClock />, path: "/activity" },
@@ -34,7 +34,6 @@ const menuItems = [
 
 const accountItems = [
   { name: "Pengaturan Akun", icon: <Settings />, path: "/akun" },
-  { name: "Daftar", icon: <UserPlus />, path: "/signup" },
   { name: "Pelanggan", icon: <Users />, path: "/pelanggan" },
 ];
 
@@ -44,7 +43,7 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-<aside className="bg-[#FDF6E3] w-64 h-screen shadow-lg px-4 py-6 hidden md:block">
+    <aside className="bg-[#FDF6E3] w-64 h-screen fixed top-0 left-0 shadow-lg px-4 py-6 hidden md:block z-20 overflow-y-auto">
       {/* Logo Selera Kampung */}
       <div className="flex justify-center items-center mb-4">
         <img
