@@ -121,21 +121,22 @@ function Pesanan() {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center flex flex-col items-center pt-0 px-6 pb-12"
+      className="min-h-screen bg-cover bg-center flex justify-center items-start pt-10 px-4 pb-20"
       style={{ backgroundImage: 'url("/background.jpg")' }}
     >
-      <div className="bg-white bg-opacity-95 rounded-xl shadow-lg max-w-4xl w-full p-6">
+      <div className="bg-white bg-opacity-95 rounded-xl shadow-xl w-full px-8 py-10 overflow-x-auto">
         {/* Header */}
-        <header className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-[#8B4513] drop-shadow-md mb-2 font-serif">
+        <header className="text-center mb-10">
+          <h1 className="text-4xl font-bold text-[#8B4513] font-serif drop-shadow">
             Selera Kampung Pekanbaru
           </h1>
-          <h2 className="text-2xl font-semibold text-[#D2691E] italic mb-2 font-serif">
+          <h2 className="text-2xl font-semibold text-[#D2691E] italic font-serif mt-1">
             Catering Lezat & Elegan
           </h2>
-          <p className="text-md text-[#A0522D]">
+          <p className="text-sm text-[#A0522D] mt-1">
             Solusi Pesan Makanan Catering Berkualitas untuk Acara Spesial Anda
           </p>
+          <div className="mt-4 border-t-2 border-[#F4A460] w-1/2 mx-auto"></div>
         </header>
 
         {/* Form Pemesanan */}
@@ -239,109 +240,106 @@ function Pesanan() {
           </form>
         </section> */}
 
-        {/* Daftar Pesanan */}
-        <section>
-          <h3 className="text-3xl font-semibold text-[#D2691E] mb-6 border-b-4 border-[#CD853F] inline-block pb-1 font-serif">
-            Daftar Pesanan Catering
-          </h3>
-          <div className="overflow-x-auto rounded-lg shadow-lg">
-            <table className="min-w-full bg-white rounded-lg overflow-hidden">
-              <thead className="bg-[#FFE4B5] text-[#8B4513] uppercase text-xs font-semibold tracking-wide">
-                <tr>
-                  <th className="px-4 py-3 border border-[#DEB887]">ID</th>
-                  <th className="px-4 py-3 border border-[#DEB887]">ID Pelanggan</th>
-                  <th className="px-4 py-3 border border-[#DEB887]">Nama Pelanggan</th>
-                  <th className="px-4 py-3 border border-[#DEB887]">Tgl Pesan</th>
-                  <th className="px-4 py-3 border border-[#DEB887]">Tgl Acara</th>
-                  <th className="px-4 py-3 border border-[#DEB887]">Jenis</th>
-                  <th className="px-4 py-3 border border-[#DEB887]">Menu</th>
-                  <th className="px-4 py-3 border border-[#DEB887]">Porsi</th>
-                  <th className="px-4 py-3 border border-[#DEB887]">Lokasi</th>
-                  <th className="px-4 py-3 border border-[#DEB887]">Catatan</th>
-                  <th className="px-4 py-3 border border-[#DEB887]">Level</th>
-                  <th className="px-4 py-3 border border-[#DEB887]">Status</th>
-                  <th className="px-4 py-3 border border-[#DEB887] text-center">Aksi</th>
-                </tr>
-              </thead>
-              <tbody className="text-sm">
-                {orders.map((o) => (
-                  <tr
-                    key={o.id}
-                    className="border border-[#DEB887] even:bg-[#FFF8DC] hover:bg-[#FAF0E6] cursor-pointer transition"
-                  >
-                    <td className="px-4 py-2 border border-[#DEB887]">{o.id}</td>
-                    <td className="px-4 py-2 border border-[#DEB887]">{o.pelanggan_id}</td>
-                    <td className="px-4 py-2 border border-[#DEB887]">{o.nama_pelanggan}</td>
-                    <td className="px-4 py-2 border border-[#DEB887]">{o.tanggal_pemesanan}</td>
-                    <td className="px-4 py-2 border border-[#DEB887]">{o.tanggal_acara}</td>
-                    <td className="px-4 py-2 border border-[#DEB887]">{o.jenis_menu}</td>
-                    <td className="px-4 py-2 border border-[#DEB887]">{o.daftar_menu || "-"}</td>
-                    <td className="px-4 py-2 border border-[#DEB887]">{o.jumlah_porsi}</td>
-                    <td className="px-4 py-2 border border-[#DEB887]">{o.lokasi_pengiriman}</td>
-                    <td className="px-4 py-2 border border-[#DEB887]">{o.catatan || "-"}</td>
-                    <td
-                      className={`px-4 py-2 border border-[#DEB887] font-semibold ${
-                        o.level_pelanggan === "Gold"
-                          ? "text-yellow-700"
-                          : o.level_pelanggan === "Silver"
-                          ? "text-gray-500"
-                          : "text-[#CD853F]"
-                      }`}
+          {/* Daftar Pesanan */}
+          <section>
+            <h3 className="text-2xl font-semibold text-[#D2691E] mb-4 border-b-4 border-[#CD853F] inline-block pb-1 font-serif">
+              Daftar Pesanan Catering
+            </h3>
+            <div className="overflow-x-auto rounded-lg shadow-md mt-4">
+              <table className="min-w-[1300px] w-full table-fixed bg-white border border-[#DEB887] text-sm">
+                <thead className="bg-[#FFF5E1] text-[#8B4513] font-semibold uppercase tracking-wide">
+                  <tr>
+                    {[
+                      "ID",
+                      "ID Pelanggan",
+                      "Nama",
+                      "Tgl Pesan",
+                      "Tgl Acara",
+                      "Jenis",
+                      "Menu",
+                      "Porsi",
+                      "Lokasi",
+                      "Catatan",
+                      "Level",
+                      "Status",
+                      "Aksi",
+                    ].map((col, i) => (
+                      <th key={i} className="px-4 py-2 border border-[#DEB887] text-left">
+                        {col}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.map((o) => (
+                    <tr
+                      key={o.id}
+                      className="even:bg-[#FFFAF0] hover:bg-[#FAF0E6] transition duration-150"
                     >
-                      {o.level_pelanggan}
-                    </td>
-                    <td className="px-4 py-2 border border-[#DEB887]">
-                      <select
-                        value={o.status}
-                        onChange={(e) => handleStatusChange(o.id, e.target.value)}
-                        className={`rounded-md px-2 py-1 text-sm font-semibold ${
-                          o.status === "Selesai"
-                            ? "text-green-700"
-                            : o.status === "Dibatalkan"
-                            ? "text-red-700"
-                            : "text-orange-700"
+                      <td className="px-4 py-2 border border-[#DEB887] w-[50px]">{o.id}</td>
+                      <td className="px-4 py-2 border border-[#DEB887] w-[110px]">{o.pelanggan_id}</td>
+                      <td className="px-4 py-2 border border-[#DEB887] w-[140px]">{o.nama_pelanggan}</td>
+                      <td className="px-4 py-2 border border-[#DEB887] w-[120px]">{o.tanggal_pemesanan}</td>
+                      <td className="px-4 py-2 border border-[#DEB887] w-[120px]">{o.tanggal_acara}</td>
+                      <td className="px-4 py-2 border border-[#DEB887] w-[100px]">{o.jenis_menu}</td>
+                      <td className="px-4 py-2 border border-[#DEB887] w-[160px]">{o.daftar_menu || "-"}</td>
+                      <td className="px-4 py-2 border border-[#DEB887] w-[80px]">{o.jumlah_porsi}</td>
+                      <td className="px-4 py-2 border border-[#DEB887] w-[160px]">{o.lokasi_pengiriman}</td>
+                      <td className="px-4 py-2 border border-[#DEB887] w-[150px]">{o.catatan || "-"}</td>
+                      <td
+                        className={`px-4 py-2 border border-[#DEB887] font-semibold w-[80px] ${
+                          o.level_pelanggan === "Gold"
+                            ? "text-yellow-700"
+                            : o.level_pelanggan === "Silver"
+                            ? "text-gray-500"
+                            : "text-[#CD853F]"
                         }`}
                       >
-                        <option value="Menunggu">Menunggu</option>
-                        <option value="Diproses">Diproses</option>
-                        <option value="Dikirim">Dikirim</option>
-                        <option value="Selesai">Selesai</option>
-                        <option value="Dibatalkan">Dibatalkan</option>
-                      </select>
-                    </td>
-                    <td className="px-4 py-2 border border-[#DEB887] text-center">
-                      {/* <button
-                        onClick={() => handleEdit(o)}
-                        className="text-[#8B4513] hover:text-[#D2691E] mr-4 font-semibold"
-                      >
-                        Edit
-                      </button> */}
-                      <button
-                        onClick={() => handleDelete(o.id)}
-                        className="text-red-600 hover:text-red-800 font-semibold"
-                      >
-                        Hapus
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-                {orders.length === 0 && (
-                  <tr>
-                    <td
-                      colSpan={12}
-                      className="text-center py-6 text-[#8B4513] font-semibold italic"
-                    >
-                      Belum ada pesanan catering.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
+                        {o.level_pelanggan}
+                      </td>
+                      <td className="px-4 py-2 border border-[#DEB887] w-[120px]">
+                        <select
+                          value={o.status}
+                          onChange={(e) => handleStatusChange(o.id, e.target.value)}
+                          className={`rounded-md px-2 py-1 text-sm font-semibold border w-full ${
+                            o.status === "Selesai"
+                              ? "text-green-700"
+                              : o.status === "Dibatalkan"
+                              ? "text-red-700"
+                              : "text-orange-700"
+                          }`}
+                        >
+                          <option value="Menunggu">Menunggu</option>
+                          <option value="Diproses">Diproses</option>
+                          <option value="Dikirim">Dikirim</option>
+                          <option value="Selesai">Selesai</option>
+                          <option value="Dibatalkan">Dibatalkan</option>
+                        </select>
+                      </td>
+                      <td className="px-4 py-2 border border-[#DEB887] w-[80px] text-center">
+                        <button
+                          onClick={() => handleDelete(o.id)}
+                          className="text-red-600 hover:underline font-semibold text-sm"
+                        >
+                          Hapus
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  {orders.length === 0 && (
+                    <tr>
+                      <td colSpan={13} className="text-center py-6 italic text-[#8B4513]">
+                        Belum ada pesanan catering.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
       </div>
-    </div>
-  );
+    );
 }
 
 export default Pesanan;
