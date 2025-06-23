@@ -39,8 +39,8 @@ const LeadManagement = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 bg-white rounded-lg shadow p-6">
-      <h2 className="text-2xl font-bold text-orange-700 mb-6 font-serif">
+    <div className="max-w-3xl mx-auto mt-10 bg-[#FDF6E3] rounded-lg shadow p-6">
+      <h2 className="text-2xl font-bold text-[#5E3B1E] border-orange-300 mb-6 font-serif">
         Follow Up
       </h2>
       <table className="min-w-full text-sm">

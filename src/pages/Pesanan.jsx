@@ -121,7 +121,7 @@ function Pesanan() {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center flex justify-center items-start pt-10 px-4 pb-20"
+      className="min-h-screen bg-cover bg-center flex justify-center items-start pt-0 px-4 pb-20"
       style={{ backgroundImage: 'url("/background.jpg")' }}
     >
       <div className="bg-white bg-opacity-95 rounded-xl shadow-xl w-full px-8 py-10 overflow-x-auto">

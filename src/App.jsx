@@ -14,6 +14,9 @@ import { useState } from 'react';
 import Kontak from './pages/Kontak';
 import { Menu as MenuIcon } from 'lucide-react';
 import LeadManagement from './pages/LeadManagement';
+import KnowledgeBase from './pages/KnowledgeBase';
+import TriggerMarketing from './pages/TriggerMarketing';
+import LoyaltyManagement from './pages/LoyaltyManagement';
 
 function App() {
   const [orders, setOrders] = useState([]); 
@@ -36,6 +39,9 @@ function App() {
         <Route path="/social-media" element={<SocialMediaMarketing />} />
         <Route path="/akun" element={<Akun />} />
         <Route path="/follow-up" element={<LeadManagement />} />
+        <Route path="/faq" element={<KnowledgeBase />} />
+        <Route path="/promo" element={<TriggerMarketing />} />
+        <Route path="/loyalty" element={<LoyaltyManagement />} />
       </Route>
     </Routes>
   );

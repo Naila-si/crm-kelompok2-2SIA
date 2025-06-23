@@ -133,7 +133,7 @@ export default function Menu() {
   };
 
   return (
-    <div className="min-h-screen bg-cover bg-center flex flex-col items-center py-12 px-6" style={{ backgroundImage: 'url("/background.jpg")' }}>
+    <div className="min-h-screen bg-cover bg-center flex flex-col items-center py-0 px-0" style={{ backgroundImage: 'url("/background.jpg")' }}>
       <div className="bg-white bg-opacity-95 rounded-xl shadow-lg w-full max-w-[1440px] mx-auto p-6">
         <h1 className="text-4xl font-bold text-center text-amber-800 mb-2">Manajemen Informasi Menu & Harga</h1>
         <p className="text-center text-gray-600 mb-8">Halaman ini berguna untuk menambahkan, mengedit, atau menghapus informasi menu dan harga sesuai kebutuhan pelanggan</p>
