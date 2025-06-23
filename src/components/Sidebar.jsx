@@ -23,18 +23,17 @@ import { Link, useLocation } from "react-router-dom";
 
 const menuItems = [
   { name: "Dashboard", icon: <LayoutDashboard />, path: "/" },
-  { name: "Pesanan", icon: <ClipboardList />, path: "/pesanan" },
+  { name: "Daftar Pesanan", icon: <ClipboardList />, path: "/pesanan" },
   { name: "Kontak Pelanggan", icon: <Users />, path: "/kontak" },
-  { name: "Menu", icon: <MdRestaurantMenu />, path: "/menu" },
-  { name: "Lacak", icon: <Search />, path: "/lacak" },
-  { name: "Lead", icon: <Lightbulb />, path: "/lead", soon: true },
-  { name: "Manajemen Aktivitas", icon: <CalendarClock />, path: "/activity" },
-  { name: "Social Media Marketing", icon: <Megaphone />, path: "/social-media" },
+  { name: "Daftar Menu", icon: <MdRestaurantMenu />, path: "/menu" },
+  // { name: "Follow Up", icon: <Lightbulb />, path: "/lead", soon: true },
+  { name: "Follow Up", icon: <Lightbulb />, path: "/follow-up" },
+  { name: "Pengingat", icon: <CalendarClock />, path: "/activity" },
+  { name: "Promo Sosmed", icon: <Megaphone />, path: "/social-media" },
 ];
 
 const accountItems = [
   { name: "Pengaturan Akun", icon: <Settings />, path: "/akun" },
-  { name: "Pelanggan", icon: <Users />, path: "/pelanggan" },
 ];
 
 const Sidebar = () => {

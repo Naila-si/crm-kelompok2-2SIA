@@ -43,6 +43,8 @@ export default function Menu() {
   const [detailMenu, setDetailMenu] = useState(null);
   const [editPaket, setEditPaket] = useState(null);
   const [detailPaket, setDetailPaket] = useState(null);
+  const [lastUpdatedMenu, setLastUpdatedMenu] = useState(new Date());
+  const [lastUpdatedPaket, setLastUpdatedPaket] = useState(new Date());
 
   const [paketMenus, setPaketMenus] = useState([
   { id: "P1", name: "Paket Hemat 1", items: ["Nasi + Ayam Goreng + Es Teh"], price: 25000, image: "https://via.placeholder.com/150" },
@@ -81,6 +83,7 @@ export default function Menu() {
     setMenus([...menus, newMenu]);
     form.reset();
     toast.success("Menu berhasil ditambah!");
+    setLastUpdatedMenu(new Date());
   };
 
   const handleEdit = (menu) => {
@@ -92,6 +95,7 @@ export default function Menu() {
     if (window.confirm(`Hapus menu "${menu.name}"?`)) {
       setMenus(menus.filter((item) => item.id !== menu.id));
       toast.success("Menu berhasil dihapus!");
+      // setLastUpdated(new Date());
     }
   };
 
@@ -113,12 +117,14 @@ export default function Menu() {
     setPaketMenus([...paketMenus, newPaket]);
     form.reset();
     toast.success("Paket berhasil ditambah!");
+    setLastUpdatedPaket(new Date());
   };
 
   const handleDeletePaket = (paket) => {
     if (window.confirm(`Hapus paket "${paket.name}"?`)) {
       setPaketMenus((prev) => prev.filter((item) => item.id !== paket.id));
       toast.success("Paket berhasil dihapus!");
+      // setLastUpdated(new Date());
     }
   };
 
@@ -129,82 +135,8 @@ export default function Menu() {
   return (
     <div className="min-h-screen bg-cover bg-center flex flex-col items-center py-12 px-6" style={{ backgroundImage: 'url("/background.jpg")' }}>
       <div className="bg-white bg-opacity-95 rounded-xl shadow-lg max-w-7xl w-full p-6">
-        <h1 className="text-4xl font-bold text-center text-amber-800 mb-2">Menu Catering Selera Kampung</h1>
-        <p className="text-center text-gray-600 mb-8">Pilih dari berbagai menu ala carte atau paket hemat untuk acara Anda</p>
-
-        {/* Form Tambah Menu */}
-        <div className="bg-gray-50 p-4 rounded-xl shadow mb-8 w-full">
-          <h3 className="text-lg font-semibold mb-2 text-amber-800">Tambah Menu Baru</h3>
-          <form onSubmit={handleAddMenu} className="flex flex-col md:flex-row gap-3 items-center">
-            <input name="name" placeholder="Nama Menu" className="border p-2 rounded w-full md:w-1/4" required />
-            <select name="category" className="border p-2 rounded w-full md:w-1/4" required>
-              {categories.filter((c) => c !== "Semua").map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-            <input name="price" type="number" placeholder="Harga" className="border p-2 rounded w-full md:w-1/4" required />
-            <input name="image" type="url" placeholder="Link Gambar (opsional)" className="border p-2 rounded w-full md:w-1/4" />
-            <button type="submit" className="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700">Tambah</button>
-          </form>
-        </div>
-
-        {/* Form Tambah Paket */}
-        <div className="bg-gray-50 p-4 rounded-xl shadow mb-8 w-full">
-          <h3 className="text-lg font-semibold mb-2 text-amber-800">Tambah Paket Baru</h3>
-          <form onSubmit={handleAddPaket} className="flex flex-col md:flex-row gap-3 items-center">
-            <input name="name" placeholder="Nama Paket" className="border p-2 rounded w-full md:w-1/4" required />
-            <input name="items" placeholder="Isi Paket (pisahkan dengan koma)" className="border p-2 rounded w-full md:w-1/4" required />
-            <input name="price" type="number" placeholder="Harga" className="border p-2 rounded w-full md:w-1/4" required />
-            <input name="image" type="url" placeholder="Link Gambar (opsional)" className="border p-2 rounded w-full md:w-1/4" />
-            <button type="submit" className="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700">Tambah</button>
-          </form>
-        </div>
-
-        {/* Filter */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-          <div className="relative w-full md:w-1/2">
-            <Search className="absolute left-3 top-2.5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Cari menu ala carte..."
-              className="w-full pl-10 pr-4 py-2 border rounded-xl"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium flex items-center ${selectedCategory === cat ? "bg-amber-700 text-white" : "bg-gray-100 text-gray-700"}`}
-              >
-                <Filter className="w-4 h-4 mr-1" />
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Ala Carte Section */}
-        <h2 className="text-2xl font-semibold text-amber-700 mb-4">Menu Ala Carte</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-          {filteredMenus.map((menu) => (
-            <div key={menu.id} className="p-4 border border-amber-200 rounded-xl shadow hover:shadow-md transition-all duration-200 bg-gradient-to-b from-yellow-50 to-white">
-              {menu.image && <img src={menu.image} alt={menu.name} className="w-full h-40 object-cover rounded-lg mb-2" />}
-              <div className="flex items-center mb-2">{renderIcon(menu.category)}<h3 className="text-lg font-semibold text-amber-900">{menu.name}</h3></div>
-              <p className="text-sm text-gray-500 mb-2">{menu.category}</p>
-              <div className="flex justify-between items-center mt-2">
-                <div className="font-bold text-green-600">Rp {menu.price.toLocaleString()}</div>
-                <div className="flex gap-2">
-                  <button onClick={() => handleEdit(menu)} className="text-sm text-blue-600 hover:underline">Edit</button>
-                  <button onClick={() => handleDelete(menu)} className="text-sm text-red-600 hover:underline">Hapus</button>
-                  <button onClick={() => handleDetail(menu)} className="text-sm text-amber-700 hover:underline">Detail</button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <h1 className="text-4xl font-bold text-center text-amber-800 mb-2">Manajemen Informasi Menu & Harga</h1>
+        <p className="text-center text-gray-600 mb-8">Halaman ini berguna untuk menambahkan, mengedit, atau menghapus informasi menu dan harga sesuai kebutuhan pelanggan</p>
 
         {/* Detail Menu */}
         {detailMenu?.id && (
@@ -217,25 +149,6 @@ export default function Menu() {
             <p><strong>Kategori:</strong> {detailMenu.category}</p>
             <p><strong>Harga:</strong> Rp {detailMenu.price.toLocaleString()}</p>
             <button onClick={() => setDetailMenu(null)} className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Tutup</button>
-          </div>
-        )}
-
-        {/* Detail Paket */}
-        {detailPaket?.id && (
-          <div className="bg-blue-50 p-4 rounded-xl shadow mb-8 w-full border border-blue-300">
-            <h3 className="text-lg font-semibold text-blue-800 mb-2">Detail Paket</h3>
-            {detailPaket.image && (
-              <img src={detailPaket.image} alt={detailPaket.name} className="w-full max-w-xs h-48 object-cover rounded mb-4" />
-            )}
-            <p><strong>Nama:</strong> {detailPaket.name}</p>
-            <p><strong>Harga:</strong> Rp {detailPaket.price.toLocaleString()}</p>
-            <p><strong>Isi Paket:</strong></p>
-            <ul className="list-disc ml-6 text-gray-700">
-              {detailPaket.items.map((item, i) => (
-                <li key={i}>{item}</li>
-              ))}
-            </ul>
-            <button onClick={() => setDetailPaket(null)} className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Tutup</button>
           </div>
         )}
 
@@ -258,6 +171,7 @@ export default function Menu() {
                 );
                 toast.success("Menu berhasil diperbarui!");
                 setEditMenu(null);
+                setLastUpdatedMenu(new Date());
               }}
               className="flex flex-col md:flex-row gap-3 items-center"
             >
@@ -311,6 +225,105 @@ export default function Menu() {
           </div>
         )}
 
+        {/* Form Tambah Menu */}
+        <div className="bg-gray-50 p-4 rounded-xl shadow mb-8 w-full">
+          <h3 className="text-lg font-semibold mb-2 text-amber-800">Tambah Menu Baru</h3>
+          <form onSubmit={handleAddMenu} className="flex flex-col md:flex-row gap-3 items-center">
+            <input name="name" placeholder="Nama Menu" className="border p-2 rounded w-full md:w-1/4" required />
+            <select name="category" className="border p-2 rounded w-full md:w-1/4" required>
+              {categories.filter((c) => c !== "Semua").map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+            <input name="price" type="number" placeholder="Harga" className="border p-2 rounded w-full md:w-1/4" required />
+            <input name="image" type="url" placeholder="Link Gambar (opsional)" className="border p-2 rounded w-full md:w-1/4" />
+            <button type="submit" className="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700">Tambah</button>
+          </form>
+          <p className="text-sm text-right text-gray-400 mt-8">
+            Terakhir diperbarui: {lastUpdatedMenu.toLocaleString()}
+          </p>
+        </div>
+
+        {/* Filter */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+          <div className="relative w-full md:w-1/2">
+            <Search className="absolute left-3 top-2.5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Cari menu ala carte..."
+              className="w-full pl-10 pr-4 py-2 border rounded-xl"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-4 py-2 rounded-xl text-sm font-medium flex items-center ${selectedCategory === cat ? "bg-amber-700 text-white" : "bg-gray-100 text-gray-700"}`}
+              >
+                <Filter className="w-4 h-4 mr-1" />
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Ala Carte Section */}
+        <h2 className="text-2xl font-semibold text-amber-700 mb-4">Menu Ala Carte</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+          {filteredMenus.map((menu) => (
+            <div key={menu.id} className="p-4 border border-amber-200 rounded-xl shadow hover:shadow-md transition-all duration-200 bg-gradient-to-b from-yellow-50 to-white">
+              {menu.image && <img src={menu.image} alt={menu.name} className="w-full h-40 object-cover rounded-lg mb-2" />}
+              <div className="flex items-center mb-2">{renderIcon(menu.category)}<h3 className="text-lg font-semibold text-amber-900">{menu.name}</h3></div>
+              <p className="text-sm text-gray-500 mb-2">{menu.category}</p>
+              <div className="flex justify-between items-center mt-2">
+                <div className="font-bold text-green-600">Rp {menu.price.toLocaleString()}</div>
+                <div className="flex gap-2">
+                  <button onClick={() => handleEdit(menu)} className="text-sm text-blue-600 hover:underline">Edit</button>
+                  <button onClick={() => handleDelete(menu)} className="text-sm text-red-600 hover:underline">Hapus</button>
+                  <button onClick={() => handleDetail(menu)} className="text-sm text-amber-700 hover:underline">Detail</button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Form Tambah Paket */}
+        <div className="bg-gray-50 p-4 rounded-xl shadow mb-8 w-full">
+          <h3 className="text-lg font-semibold mb-2 text-amber-800">Tambah Paket Baru</h3>
+          <form onSubmit={handleAddPaket} className="flex flex-col md:flex-row gap-3 items-center">
+            <input name="name" placeholder="Nama Paket" className="border p-2 rounded w-full md:w-1/4" required />
+            <input name="items" placeholder="Isi Paket (pisahkan dengan koma)" className="border p-2 rounded w-full md:w-1/4" required />
+            <input name="price" type="number" placeholder="Harga" className="border p-2 rounded w-full md:w-1/4" required />
+            <input name="image" type="url" placeholder="Link Gambar (opsional)" className="border p-2 rounded w-full md:w-1/4" />
+            <button type="submit" className="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700">Tambah</button>
+          </form>
+          <p className="text-sm text-right text-gray-400 mt-8">
+            Terakhir diperbarui: {lastUpdatedPaket.toLocaleString()}
+          </p>
+        </div>
+
+        {/* Detail Paket */}
+        {detailPaket?.id && (
+          <div className="bg-blue-50 p-4 rounded-xl shadow mb-8 w-full border border-blue-300">
+            <h3 className="text-lg font-semibold text-blue-800 mb-2">Detail Paket</h3>
+            {detailPaket.image && (
+              <img src={detailPaket.image} alt={detailPaket.name} className="w-full max-w-xs h-48 object-cover rounded mb-4" />
+            )}
+            <p><strong>Nama:</strong> {detailPaket.name}</p>
+            <p><strong>Harga:</strong> Rp {detailPaket.price.toLocaleString()}</p>
+            <p><strong>Isi Paket:</strong></p>
+            <ul className="list-disc ml-6 text-gray-700">
+              {detailPaket.items.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ul>
+            <button onClick={() => setDetailPaket(null)} className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Tutup</button>
+          </div>
+        )}
+
         {/* Form Edit Paket */}
         {editPaket?.id && (
           <div className="bg-yellow-50 p-4 rounded-xl shadow mb-8 w-full">
@@ -329,6 +342,7 @@ export default function Menu() {
                 );
                 toast.success("Paket berhasil diperbarui!");
                 setEditPaket(null);
+                setLastUpdatedPaket(new Date()); 
               }}
               className="flex flex-col md:flex-row gap-3 items-center"
             >
@@ -368,7 +382,6 @@ export default function Menu() {
             </form>
           </div>
         )}
-
 
         {/* Paket Section */}
         <h2 className="text-2xl font-semibold text-amber-700 mb-4">Menu Paket Spesial</h2>

@@ -1,82 +1,86 @@
 import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
-function Product() {
+function Pesanan() {
   const [orders, setOrders] = useState([]);
-  const [form, setForm] = useState({
-      pelanggan_id: "",
-      nama_pelanggan: "",
-      tanggal_pemesanan: "",
-      tanggal_acara: "",
-      jenis_menu: "",
-      daftar_menu: "",
-      jumlah_porsi: "",
-      lokasi_pengiriman: "",
-      catatan: "",
-      status: "Proses",
-    });
-  const [editId, setEditId] = useState(null);
+  // const [form, setForm] = useState({
+  //     pelanggan_id: "",
+  //     nama_pelanggan: "",
+  //     tanggal_pemesanan: "",
+  //     tanggal_acara: "",
+  //     jenis_menu: "",
+  //     daftar_menu: "",
+  //     jumlah_porsi: "",
+  //     lokasi_pengiriman: "",
+  //     catatan: "",
+  //     status: "Proses",
+  //   });
+  // const [editId, setEditId] = useState(null);
 
  useEffect(() => {
   fetch("https://api.npoint.io/9658db68dc5a6df45ed3")
     .then((res) => res.json())
     .then((data) => {
-      setOrders(data);
-      localStorage.setItem("orders", JSON.stringify(data)); // simpan di localStorage
+      const withLevel = data.map((o) => ({
+        ...o,
+        level_pelanggan: o.level_pelanggan || "Bronze", // default jika tidak ada
+      }));
+      setOrders(withLevel);
+      localStorage.setItem("orders", JSON.stringify(withLevel)); // simpan di localStorage
     });
 }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Submit form, editId:", editId);
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("Submit form, editId:", editId);
 
-    if (editId) {
-      const updated = orders.map((o) =>
-        o.id === editId ? { ...form, id: editId } : o
-      );
-      setOrders(updated);
-      localStorage.setItem("orders", JSON.stringify(updated));
-      toast.success("Pesanan berhasil diperbarui!");
-      setEditId(null);
-    } else {
-      const newId = orders.length ? Math.max(...orders.map((o) => o.id)) + 1 : 1;
-      const newOrder = { ...form, id: newId };
-      const newOrders = [...orders, newOrder];
-      setOrders(newOrders);
-      localStorage.setItem("orders", JSON.stringify(newOrders));
-      toast.success("Pesanan baru berhasil ditambahkan!");
-    }
+  //   if (editId) {
+  //     const updated = orders.map((o) =>
+  //       o.id === editId ? { ...form, id: editId } : o
+  //     );
+  //     setOrders(updated);
+  //     localStorage.setItem("orders", JSON.stringify(updated));
+  //     toast.success("Pesanan berhasil diperbarui!");
+  //     setEditId(null);
+  //   } else {
+  //     const newId = orders.length ? Math.max(...orders.map((o) => o.id)) + 1 : 1;
+  //     const newOrder = { ...form, id: newId };
+  //     const newOrders = [...orders, newOrder];
+  //     setOrders(newOrders);
+  //     localStorage.setItem("orders", JSON.stringify(newOrders));
+  //     toast.success("Pesanan baru berhasil ditambahkan!");
+  //   }
 
-    setForm({
-      pelanggan_id: "",
-      nama_pelanggan: "",
-      tanggal_pemesanan: "",
-      tanggal_acara: "",
-      jenis_menu: "",
-      daftar_menu: "",
-      jumlah_porsi: "",
-      lokasi_pengiriman: "",
-      catatan: "",
-      status: "Proses",
-    });
-  };
+  //   setForm({
+  //     pelanggan_id: "",
+  //     nama_pelanggan: "",
+  //     tanggal_pemesanan: "",
+  //     tanggal_acara: "",
+  //     jenis_menu: "",
+  //     daftar_menu: "",
+  //     jumlah_porsi: "",
+  //     lokasi_pengiriman: "",
+  //     catatan: "",
+  //     status: "Proses",
+  //   });
+  // };
 
-  const handleEdit = (order) => {
-    console.log("Edit data:", order); // untuk cek
-    setForm({
-      pelanggan_id: order.pelanggan_id || "",
-      nama_pelanggan: order.nama_pelanggan || "",
-      tanggal_pemesanan: order.tanggal_pemesanan || "",
-      tanggal_acara: order.tanggal_acara || "",
-      jenis_menu: order.jenis_menu || "",
-      daftar_menu: order.daftar_menu || "",
-      jumlah_porsi: order.jumlah_porsi || "",
-      lokasi_pengiriman: order.lokasi_pengiriman || "",
-      catatan: order.catatan || "",
-      status: order.status || "Proses",
-    });
-    setEditId(order.id);
-  };
+  // const handleEdit = (order) => {
+  //   console.log("Edit data:", order); // untuk cek
+  //   setForm({
+  //     pelanggan_id: order.pelanggan_id || "",
+  //     nama_pelanggan: order.nama_pelanggan || "",
+  //     tanggal_pemesanan: order.tanggal_pemesanan || "",
+  //     tanggal_acara: order.tanggal_acara || "",
+  //     jenis_menu: order.jenis_menu || "",
+  //     daftar_menu: order.daftar_menu || "",
+  //     jumlah_porsi: order.jumlah_porsi || "",
+  //     lokasi_pengiriman: order.lokasi_pengiriman || "",
+  //     catatan: order.catatan || "",
+  //     status: order.status || "Proses",
+  //   });
+  //   setEditId(order.id);
+  // };
 
   const handleDelete = (id) => {
     const order = orders.find((o) => o.id === id);
@@ -88,22 +92,31 @@ function Product() {
       localStorage.setItem("orders", JSON.stringify(filtered));
       toast.success("Pesanan berhasil dihapus!");
       
-      if (editId === id) {
-        setEditId(null);
-        setForm({
-          pelanggan_id: "",
-          nama_pelanggan: "",
-          tanggal_pemesanan: "",
-          tanggal_acara: "",
-          jenis_menu: "",
-          daftar_menu: "",
-          jumlah_porsi: "",
-          lokasi_pengiriman: "",
-          catatan: "",
-          status: "Proses",
-        });
-      }
+      // if (editId === id) {
+      //   setEditId(null);
+      //   setForm({
+      //     pelanggan_id: "",
+      //     nama_pelanggan: "",
+      //     tanggal_pemesanan: "",
+      //     tanggal_acara: "",
+      //     jenis_menu: "",
+      //     daftar_menu: "",
+      //     jumlah_porsi: "",
+      //     lokasi_pengiriman: "",
+      //     catatan: "",
+      //     status: "Proses",
+      //   });
+      // }
     }
+  };
+
+  const handleStatusChange = (id, newStatus) => {
+    const updatedOrders = orders.map((o) =>
+      o.id === id ? { ...o, status: newStatus } : o
+    );
+    setOrders(updatedOrders);
+    localStorage.setItem("orders", JSON.stringify(updatedOrders));
+    toast.success("Status pesanan diperbarui!");
   };
 
   return (
@@ -126,7 +139,7 @@ function Product() {
         </header>
 
         {/* Form Pemesanan */}
-        <section className="mb-14">
+        {/* <section className="mb-14">
           <h2 className="text-2xl font-semibold text-[#D2691E] mb-4 border-b-4 border-[#CD853F] inline-block pb-1 font-serif">
             {editId ? "Edit" : "Tambah"} Pesanan Catering
           </h2>
@@ -224,7 +237,7 @@ function Product() {
               {editId ? "Update" : "Tambah"} Pesanan
             </button>
           </form>
-        </section>
+        </section> */}
 
         {/* Daftar Pesanan */}
         <section>
@@ -245,6 +258,7 @@ function Product() {
                   <th className="px-4 py-3 border border-[#DEB887]">Porsi</th>
                   <th className="px-4 py-3 border border-[#DEB887]">Lokasi</th>
                   <th className="px-4 py-3 border border-[#DEB887]">Catatan</th>
+                  <th className="px-4 py-3 border border-[#DEB887]">Level</th>
                   <th className="px-4 py-3 border border-[#DEB887]">Status</th>
                   <th className="px-4 py-3 border border-[#DEB887] text-center">Aksi</th>
                 </tr>
@@ -267,22 +281,41 @@ function Product() {
                     <td className="px-4 py-2 border border-[#DEB887]">{o.catatan || "-"}</td>
                     <td
                       className={`px-4 py-2 border border-[#DEB887] font-semibold ${
-                        o.status === "Selesai"
-                          ? "text-green-700"
-                          : o.status === "Dibatalkan"
-                          ? "text-red-700"
-                          : "text-orange-700"
+                        o.level_pelanggan === "Gold"
+                          ? "text-yellow-700"
+                          : o.level_pelanggan === "Silver"
+                          ? "text-gray-500"
+                          : "text-[#CD853F]"
                       }`}
                     >
-                      {o.status}
+                      {o.level_pelanggan}
+                    </td>
+                    <td className="px-4 py-2 border border-[#DEB887]">
+                      <select
+                        value={o.status}
+                        onChange={(e) => handleStatusChange(o.id, e.target.value)}
+                        className={`rounded-md px-2 py-1 text-sm font-semibold ${
+                          o.status === "Selesai"
+                            ? "text-green-700"
+                            : o.status === "Dibatalkan"
+                            ? "text-red-700"
+                            : "text-orange-700"
+                        }`}
+                      >
+                        <option value="Menunggu">Menunggu</option>
+                        <option value="Diproses">Diproses</option>
+                        <option value="Dikirim">Dikirim</option>
+                        <option value="Selesai">Selesai</option>
+                        <option value="Dibatalkan">Dibatalkan</option>
+                      </select>
                     </td>
                     <td className="px-4 py-2 border border-[#DEB887] text-center">
-                      <button
+                      {/* <button
                         onClick={() => handleEdit(o)}
                         className="text-[#8B4513] hover:text-[#D2691E] mr-4 font-semibold"
                       >
                         Edit
-                      </button>
+                      </button> */}
                       <button
                         onClick={() => handleDelete(o.id)}
                         className="text-red-600 hover:text-red-800 font-semibold"
@@ -311,4 +344,4 @@ function Product() {
   );
 }
 
-export default Product;
+export default Pesanan;
