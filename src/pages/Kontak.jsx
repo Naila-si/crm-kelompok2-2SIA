@@ -48,7 +48,7 @@ const Kontak = () => {
 
   return (
     <div className="min-h-screen bg-[#FDF6E3] py-10 px-6">
-      <div className="max-w-6xl mx-auto space-y-10">
+      <div className="w-full max-w-[1400px] mx-auto space-y-10">
         {/* Header */}
         <h1 className="text-4xl font-bold text-[#5E3B1E] border-b-4 border-amber-400 pb-3 font-serif">
           Kontak Pelanggan
@@ -104,7 +104,7 @@ const Kontak = () => {
 
         {/* Tabel Kontak */}
         <div className="bg-white p-6 rounded-xl shadow-md overflow-x-auto">
-          <table className="w-full text-sm table-auto">
+          <table className="min-w-[1000px] w-full text-sm table-auto">
             <thead>
               <tr className="bg-amber-50 text-[#5E3B1E] uppercase text-xs font-semibold">
                 <th className="p-4 text-left">Nama</th>

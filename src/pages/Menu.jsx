@@ -134,7 +134,7 @@ export default function Menu() {
 
   return (
     <div className="min-h-screen bg-cover bg-center flex flex-col items-center py-12 px-6" style={{ backgroundImage: 'url("/background.jpg")' }}>
-      <div className="bg-white bg-opacity-95 rounded-xl shadow-lg max-w-7xl w-full p-6">
+      <div className="bg-white bg-opacity-95 rounded-xl shadow-lg w-full max-w-[1440px] mx-auto p-6">
         <h1 className="text-4xl font-bold text-center text-amber-800 mb-2">Manajemen Informasi Menu & Harga</h1>
         <p className="text-center text-gray-600 mb-8">Halaman ini berguna untuk menambahkan, mengedit, atau menghapus informasi menu dan harga sesuai kebutuhan pelanggan</p>
 
@@ -272,10 +272,10 @@ export default function Menu() {
 
         {/* Ala Carte Section */}
         <h2 className="text-2xl font-semibold text-amber-700 mb-4">Menu Ala Carte</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {filteredMenus.map((menu) => (
             <div key={menu.id} className="p-4 border border-amber-200 rounded-xl shadow hover:shadow-md transition-all duration-200 bg-gradient-to-b from-yellow-50 to-white">
-              {menu.image && <img src={menu.image} alt={menu.name} className="w-full h-40 object-cover rounded-lg mb-2" />}
+              {menu.image && <img src={menu.image} alt={menu.name} className="w-full h-48 object-cover rounded-lg mb-2" />}
               <div className="flex items-center mb-2">{renderIcon(menu.category)}<h3 className="text-lg font-semibold text-amber-900">{menu.name}</h3></div>
               <p className="text-sm text-gray-500 mb-2">{menu.category}</p>
               <div className="flex justify-between items-center mt-2">
@@ -385,12 +385,12 @@ export default function Menu() {
 
         {/* Paket Section */}
         <h2 className="text-2xl font-semibold text-amber-700 mb-4">Menu Paket Spesial</h2>
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {paketMenus.map((paket) => (
             <div key={paket.id} className="p-5 border-l-4 border-amber-600 bg-amber-50 rounded-xl shadow-sm">
               <div className="flex items-center mb-2">
                 {paket.image && (
-                  <img src={paket.image} alt={paket.name} className="w-full h-40 object-cover rounded-lg mb-3" />
+                  <img src={paket.image} alt={paket.name} className="w-full h-48 object-cover rounded-lg mb-3" />
                 )}
                 <Box className="w-5 h-5 mr-2 text-amber-700" />
                 <h3 className="text-lg font-semibold text-amber-900">{paket.name}</h3>
