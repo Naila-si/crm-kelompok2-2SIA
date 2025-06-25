@@ -17,6 +17,9 @@ import KnowledgeBase from './pages/Admin/KnowledgeBase';
 import TriggerMarketing from './pages/Admin/TriggerMarketing';
 import LoyaltyManagement from './pages/Admin/LoyaltyManagement';
 import Beranda from './pages/User/Beranda';
+import InformasiMenu from './pages/User/InformasiMenu';
+import OrderManagement from './pages/User/OrderManagement';
+import TrackingDelivery from './pages/User/TrackingDelivery';
 
 function App() {
   const [orders, setOrders] = useState([]);
@@ -67,12 +70,19 @@ function App() {
           <Route path="/faq" element={<KnowledgeBase />} />
           <Route path="/promo" element={<TriggerMarketing />} />
           <Route path="/loyalty" element={<LoyaltyManagement />} />
+          <Route path="/beranda" element={<Beranda />} />
+          <Route path="/informasi-menu" element={<InformasiMenu />} />
         </Route>
       )}
 
       {/* User Routes */}
       {user && user.role === "user" && (
-        <Route path="/beranda" element={<Beranda />} />
+        <>
+          <Route path="/beranda" element={<Beranda />} />
+          <Route path="/informasi-menu" element={<InformasiMenu />} />
+          <Route path="/order-management" element={<OrderManagement />} />
+          <Route path="/tracking" element={<TrackingDelivery />} />
+        </>
       )}
     </Routes>
   );
