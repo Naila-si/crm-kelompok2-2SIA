@@ -2,8 +2,8 @@ import React, { useState } from "react";
 
 const Akun = () => {
   const [form, setForm] = useState({
-    nama: "Admin Selera",
-    email: "admin@selera.id",
+    nama: "Admin",
+    email: "admin@gmail.com",
     passwordLama: "",
     passwordBaru: "",
     konfirmasiPassword: "",

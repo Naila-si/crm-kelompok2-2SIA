@@ -25,7 +25,7 @@ import { MdRestaurantMenu } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
 
 const menuItems = [
-  { name: "Dashboard", icon: <LayoutDashboard />, path: "/" },
+  { name: "Dashboard", icon: <LayoutDashboard />, path: "/dashboard" },
   { name: "Daftar Pesanan", icon: <ClipboardList />, path: "/pesanan" },
   { name: "Kontak Pelanggan", icon: <Users />, path: "/kontak" },
   { name: "Daftar Menu", icon: <MdRestaurantMenu />, path: "/menu" },

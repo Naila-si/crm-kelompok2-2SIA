@@ -6,15 +6,40 @@ function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Login hanya jika cocok dengan email dan password ini
-    if (form.email === "admin@selera.id" && form.password === "12345678") {
+    const dummyAccounts = {
+      "admin@gmail.com": { password: "12345", role: "admin" },
+      "user1@gmail.com": { password: "12345", role: "user", level: "bronze" },
+      "user2@gmail.com": { password: "12345", role: "user", level: "silver" },
+      "user3@gmail.com": { password: "12345", role: "user", level: "gold" },
+    };
+
+    const account = dummyAccounts[form.email];
+
+    if (account && form.password === account.password) {
+      // Simpan ke localStorage
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          email: form.email,
+          role: account.role,
+          level: account.level || null,
+        })
+      );
+
       alert("Login berhasil!");
-      navigate("/");
+
+      // Arahkan berdasarkan role
+      if (account.role === "admin") {
+        navigate("/dashboard");
+      } else {
+        navigate("/beranda");
+      }
     } else {
       alert("Email atau password salah!");
     }
