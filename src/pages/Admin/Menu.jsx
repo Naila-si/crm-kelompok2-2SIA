@@ -9,31 +9,16 @@ import {
   Box,
 } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
-
-const initialMenus = [
-  { id: 1, name: "Nasi Goreng Kampung", category: "Makanan", price: 18000, image: "https://via.placeholder.com/150" },
-  { id: 2, name: "Ayam Bakar Sambal Ijo", category: "Makanan", price: 22000, image: "https://via.placeholder.com/150" },
-  { id: 3, name: "Sate Ayam + Lontong", category: "Makanan", price: 20000, image: "https://via.placeholder.com/150" },
-  { id: 4, name: "Rendang Daging", category: "Makanan", price: 28000, image: "https://via.placeholder.com/150" },
-  { id: 5, name: "Nasi Uduk Komplit", category: "Makanan", price: 23000, image: "https://via.placeholder.com/150" },
-  { id: 6, name: "Risoles Mayo", category: "Makanan Ringan", price: 7000, image: "https://via.placeholder.com/150" },
-  { id: 7, name: "Pastel Goreng", category: "Makanan Ringan", price: 6000, image: "https://via.placeholder.com/150" },
-  { id: 8, name: "Tahu Isi Pedas", category: "Makanan Ringan", price: 5000, image: "https://via.placeholder.com/150" },
-  { id: 9, name: "Pisang Coklat", category: "Makanan Ringan", price: 8000, image: "https://via.placeholder.com/150" },
-  { id: 10, name: "Lemper Ayam", category: "Makanan Ringan", price: 4000, image: "https://via.placeholder.com/150" },
-  { id: 11, name: "Es Teh Manis", category: "Minuman", price: 5000, image: "https://via.placeholder.com/150" },
-  { id: 12, name: "Kopi Tubruk", category: "Minuman", price: 7000, image: "https://via.placeholder.com/150" },
-  { id: 13, name: "Es Jeruk Segar", category: "Minuman", price: 6000, image: "https://via.placeholder.com/150" },
-  { id: 14, name: "Teh Tarik", category: "Minuman", price: 8000, image: "https://via.placeholder.com/150" },
-  { id: 15, name: "Jus Alpukat", category: "Minuman", price: 10000, image: "https://via.placeholder.com/150" },
-  { id: 16, name: "Es Buah Segar", category: "Dessert", price: 12000, image: "https://via.placeholder.com/150" },
-  { id: 17, name: "Puding Coklat Vla", category: "Dessert", price: 10000, image: "https://via.placeholder.com/150" },
-  { id: 18, name: "Klepon Isi Gula", category: "Dessert", price: 7000, image: "https://via.placeholder.com/150" },
-  { id: 19, name: "Kolak Pisang", category: "Dessert", price: 8000, image: "https://via.placeholder.com/150" },
-  { id: 20, name: "Dadar Gulung", category: "Dessert", price: 6000, image: "https://via.placeholder.com/150" },
-];
+import { supabase } from "../../supabase";
 
 const categories = ["Semua", "Makanan", "Makanan Ringan", "Minuman", "Dessert"];
+
+const initialMenus = [
+  { id: 1, name: "Nasi Goreng", category: "Makanan", price: 18000, image: "https://via.placeholder.com/150" },
+  { id: 2, name: "Es Teh Manis", category: "Minuman", price: 5000, image: "https://via.placeholder.com/150" },
+  { id: 3, name: "Tahu Isi", category: "Makanan Ringan", price: 3000, image: "https://via.placeholder.com/150" },
+  { id: 4, name: "Brownies Cokelat", category: "Dessert", price: 12000, image: "https://via.placeholder.com/150" },
+];
 
 export default function Menu() {
   const [menus, setMenus] = useState(initialMenus);
@@ -47,12 +32,12 @@ export default function Menu() {
   const [lastUpdatedPaket, setLastUpdatedPaket] = useState(new Date());
 
   const [paketMenus, setPaketMenus] = useState([
-  { id: "P1", name: "Paket Hemat 1", items: ["Nasi + Ayam Goreng + Es Teh"], price: 25000, image: "https://via.placeholder.com/150" },
-  { id: "P2", name: "Paket Arisan", items: ["Nasi + Rendang + Sayur Asem + Teh Manis"], price: 35000, image: "https://via.placeholder.com/150" },
-  { id: "P3", name: "Paket Kantoran", items: ["Nasi + Ayam Bakar + Tahu + Es Jeruk"], price: 30000, image: "https://via.placeholder.com/150" },
-  { id: "P4", name: "Paket Snack Box", items: ["Pastel + Risoles + Teh Kotak"], price: 15000, image: "https://via.placeholder.com/150" },
-  { id: "P5", name: "Paket Nasi Uduk", items: ["Nasi Uduk + Telur Balado + Sambal + Es Teh"], price: 27000, image: "https://via.placeholder.com/150" },
-]);
+    { id: "P1", name: "Paket Hemat 1", items: ["Nasi + Ayam Goreng + Es Teh"], price: 25000, image: "https://via.placeholder.com/150" },
+    { id: "P2", name: "Paket Arisan", items: ["Nasi + Rendang + Sayur Asem + Teh Manis"], price: 35000, image: "https://via.placeholder.com/150" },
+    { id: "P3", name: "Paket Kantoran", items: ["Nasi + Ayam Bakar + Tahu + Es Jeruk"], price: 30000, image: "https://via.placeholder.com/150" },
+    { id: "P4", name: "Paket Snack Box", items: ["Pastel + Risoles + Teh Kotak"], price: 15000, image: "https://via.placeholder.com/150" },
+    { id: "P5", name: "Paket Nasi Uduk", items: ["Nasi Uduk + Telur Balado + Sambal + Es Teh"], price: 27000, image: "https://via.placeholder.com/150" },
+  ]);
 
   const filteredMenus = menus.filter(
     (menu) =>
@@ -100,9 +85,7 @@ export default function Menu() {
   };
 
   const handleDetail = (menu) => setDetailMenu(menu);
-  const handleEditPaket = (paket) => {
-    setEditPaket(paket);
-  };
+  const handleEditPaket = (paket) => setEditPaket(paket);
 
   const handleAddPaket = (e) => {
     e.preventDefault();
@@ -124,12 +107,11 @@ export default function Menu() {
     if (window.confirm(`Hapus paket "${paket.name}"?`)) {
       setPaketMenus((prev) => prev.filter((item) => item.id !== paket.id));
       toast.success("Paket berhasil dihapus!");
+      // setLastUpdated(new Date());
     }
   };
 
-  const handleDetailPaket = (paket) => {
-    setDetailPaket(paket);
-  };
+  const handleDetailPaket = (paket) => setDetailPaket(paket);
 
   return (
     <div className="min-h-screen bg-cover bg-center flex flex-col items-center py-0 px-0" style={{ backgroundImage: 'url("/background.jpg")' }}>

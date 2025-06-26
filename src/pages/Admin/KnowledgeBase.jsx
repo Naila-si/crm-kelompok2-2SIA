@@ -1,85 +1,77 @@
 import React, { useState, useEffect } from "react";
+import { supabase } from "../../supabase";
 import toast from "react-hot-toast";
-
-const dummyFaqs = [
-  {
-    id: 1,
-    question: "Bagaimana cara memesan makanan?",
-    answer: "Kamu bisa memesan melalui menu utama dan pilih makanan yang diinginkan.",
-    isDraft: false,
-  },
-  {
-    id: 2,
-    question: "Apakah bisa membatalkan pesanan?",
-    answer: "Ya, pesanan bisa dibatalkan dalam 5 menit setelah pemesanan.",
-    isDraft: false,
-  },
-  {
-    id: 3,
-    question: "Apakah tersedia layanan antar?",
-    answer: "Kami menyediakan layanan antar untuk area kampus dan sekitarnya.",
-    isDraft: false,
-  },
-  {
-    id: 4,
-    question: "Bagaimana metode pembayarannya?",
-    answer: "Pembayaran bisa melalui cash, QRIS, atau transfer bank.",
-    isDraft: false,
-  },
-  {
-    id: 5,
-    question: "Apakah bisa pre-order untuk acara?",
-    answer: "Ya, silakan hubungi kami minimal H-2 sebelum acara.",
-    isDraft: true, // contoh draft
-  },
-];
 
 const KnowledgeBase = () => {
   const [faqs, setFaqs] = useState([]);
   const [form, setForm] = useState({ id: null, question: "", answer: "", isDraft: false });
   const [expandedId, setExpandedId] = useState(null);
-  const [filter, setFilter] = useState("all"); // all, published, draft
+  const [filter, setFilter] = useState("all");
+  const [submitMode, setSubmitMode] = useState("publish");
+
+  const fetchFaqs = async () => {
+    const { data, error } = await supabase
+      .from("faqs")
+      .select("*")
+      .order("id", { ascending: true });
+
+    if (error) {
+      toast.error("Gagal memuat FAQ");
+      console.error("Fetch error:", error);
+    } else {
+      setFaqs(data);
+    }
+  };
 
   useEffect(() => {
-    const storedFaqs = JSON.parse(localStorage.getItem("faqs")) || [];
-    if (storedFaqs.length === 0) {
-      localStorage.setItem("faqs", JSON.stringify(dummyFaqs));
-      setFaqs(dummyFaqs);
-    } else {
-      setFaqs(storedFaqs);
-    }
+    fetchFaqs();
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    if (e?.preventDefault) e.preventDefault();
     if (!form.question || !form.answer) return;
 
+    const payload = {
+      question: form.question,
+      answer: form.answer,
+      is_draft: submitMode === "draft",
+    };
+
     if (form.id !== null) {
-      const updated = faqs.map((f) => (f.id === form.id ? form : f));
-      setFaqs(updated);
-      localStorage.setItem("faqs", JSON.stringify(updated));
-      toast.success(form.isDraft ? "Draft diperbarui" : "FAQ diperbarui");
+      const { error } = await supabase
+        .from("faqs")
+        .update(payload)
+        .eq("id", form.id);
+
+      if (error) return toast.error("Gagal memperbarui FAQ");
+      toast.success(payload.is_draft ? "Draft diperbarui" : "FAQ diperbarui");
     } else {
-      const newFaq = { ...form, id: Date.now() };
-      const updated = [...faqs, newFaq];
-      setFaqs(updated);
-      localStorage.setItem("faqs", JSON.stringify(updated));
-      toast.success(form.isDraft ? "Draft disimpan" : "FAQ ditambahkan");
+      const { error } = await supabase.from("faqs").insert([payload]);
+      if (error) return toast.error("Gagal menambahkan FAQ");
+      toast.success(payload.is_draft ? "Draft disimpan" : "FAQ ditambahkan");
     }
 
     setForm({ id: null, question: "", answer: "", isDraft: false });
+    setSubmitMode("publish");
+    fetchFaqs();
   };
 
   const handleEdit = (faq) => {
-    setForm(faq);
+    setForm({
+      id: faq.id,
+      question: faq.question,
+      answer: faq.answer,
+      isDraft: faq.is_draft,
+    });
+    setSubmitMode(faq.is_draft ? "draft" : "publish");
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm("Hapus FAQ ini?")) {
-      const updated = faqs.filter((f) => f.id !== id);
-      setFaqs(updated);
-      localStorage.setItem("faqs", JSON.stringify(updated));
+      const { error } = await supabase.from("faqs").delete().eq("id", id);
+      if (error) return toast.error("Gagal menghapus FAQ");
       toast.success("FAQ dihapus");
+      fetchFaqs();
     }
   };
 
@@ -90,7 +82,9 @@ const KnowledgeBase = () => {
   const filteredFaqs =
     filter === "all"
       ? faqs
-      : faqs.filter((faq) => (filter === "published" ? !faq.isDraft : faq.isDraft));
+      : faqs.filter((faq) =>
+          filter === "published" ? !faq.is_draft : faq.is_draft
+        );
 
   return (
     <div className="min-h-screen bg-[#FFF8F0] py-10 px-6">
@@ -113,7 +107,7 @@ const KnowledgeBase = () => {
         </div>
 
         {/* Form FAQ */}
-        <form onSubmit={handleSubmit} className="grid gap-4 mb-10">
+        <form className="grid gap-4 mb-10">
           <input
             type="text"
             placeholder="Pertanyaan"
@@ -133,15 +127,21 @@ const KnowledgeBase = () => {
 
           <div className="flex gap-2">
             <button
-              type="submit"
-              onClick={() => setForm({ ...form, isDraft: false })}
+              type="button"
+              onClick={() => {
+                setSubmitMode("publish");
+                handleSubmit();
+              }}
               className="bg-[#D2691E] text-white py-2 px-4 rounded hover:bg-[#A0522D]"
             >
               {form.id ? "Update FAQ" : "Tambah FAQ"}
             </button>
             <button
-              type="submit"
-              onClick={() => setForm({ ...form, isDraft: true })}
+              type="button"
+              onClick={() => {
+                setSubmitMode("draft");
+                handleSubmit();
+              }}
               className="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600"
             >
               {form.id ? "Simpan sebagai Draft" : "Tambah Draft"}
@@ -163,20 +163,26 @@ const KnowledgeBase = () => {
                   onClick={() => toggleExpand(faq.id)}
                   className="font-semibold text-[#8B4513] hover:underline"
                 >
-                  {faq.question} {faq.isDraft && <span className="text-sm italic text-gray-500">(Draft)</span>}
+                  {faq.question} {faq.is_draft && <span className="text-sm italic text-gray-500">(Draft)</span>}
                 </p>
                 {expandedId === faq.id && (
                   <p className="mt-2 text-gray-700">{faq.answer}</p>
                 )}
                 <div className="mt-2 space-x-2">
                   <button
-                    onClick={() => handleEdit(faq)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit(faq);
+                    }}
                     className="text-blue-600 hover:underline text-sm"
                   >
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(faq.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(faq.id);
+                    }}
                     className="text-red-600 hover:underline text-sm"
                   >
                     Hapus

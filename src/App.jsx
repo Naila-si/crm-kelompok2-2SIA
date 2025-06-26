@@ -35,20 +35,7 @@ function App() {
   return (
     <Routes>
       {/* Arahkan root ke dashboard atau beranda tergantung role */}
-      <Route
-        path="/"
-        element={
-          user ? (
-            user.role === "admin" ? (
-              <Navigate to="/dashboard" />
-            ) : (
-              <Navigate to="/beranda" />
-            )
-          ) : (
-            <Navigate to="/signin" />
-          )
-        }
-      />
+      <Route path="/" element={<Navigate to="/signin" />} />
 
       {/* Auth Pages */}
       <Route path="/signin" element={<Login />} />

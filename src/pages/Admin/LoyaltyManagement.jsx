@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { supabase } from "../../supabase";
 import toast from "react-hot-toast";
 
 const defaultLevels = [
@@ -7,30 +8,9 @@ const defaultLevels = [
   { id: 3, name: "Gold", minPoints: 250 },
 ];
 
-const defaultRules = [
-  {
-    id: 1,
-    title: "1 poin tiap pembelian Rp10.000",
-    description: "Berlaku untuk pelanggan Bronze.",
-    level: "Bronze",
-  },
-  {
-    id: 2,
-    title: "2 poin tiap pembelian Rp10.000",
-    description: "Bonus poin untuk pelanggan Silver.",
-    level: "Silver",
-  },
-  {
-    id: 3,
-    title: "3 poin tiap pembelian Rp10.000",
-    description: "Pelanggan Gold mendapat poin lebih banyak.",
-    level: "Gold",
-  },
-];
-
 const LoyaltyManagement = () => {
   const [rules, setRules] = useState([]);
-  const [levels, setLevels] = useState(defaultLevels);
+  const [levels] = useState(defaultLevels);
   const [form, setForm] = useState({
     id: null,
     title: "",
@@ -39,39 +19,68 @@ const LoyaltyManagement = () => {
   });
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("loyaltyRules")) || defaultRules;
-    setRules(saved);
+    fetchRules();
   }, []);
 
-  const saveRules = (data) => {
-    setRules(data);
-    localStorage.setItem("loyaltyRules", JSON.stringify(data));
+  const fetchRules = async () => {
+    const { data, error } = await supabase
+      .from("loyalty_rules")
+      .select("*")
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      toast.error("Gagal memuat data");
+      console.error(error);
+    } else {
+      setRules(data);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title || !form.description || !form.level) return;
 
     if (form.id) {
-      const updated = rules.map((r) => (r.id === form.id ? form : r));
-      saveRules(updated);
+      console.log("Mengirim data:", form);
+      const { error } = await supabase
+        .from("loyalty_rules")
+        .update({
+          title: form.title,
+          description: form.description,
+          level: form.level,
+        })
+        .eq("id", form.id);
+
+      if (error) return toast.error("Gagal memperbarui aturan");
       toast.success("Aturan diperbarui");
     } else {
-      const newRule = { ...form, id: Date.now() };
-      saveRules([...rules, newRule]);
+      const { error } = await supabase.from("loyalty_rules").insert([
+        {
+          title: form.title,
+          description: form.description,
+          level: form.level,
+        },
+      ]);
+
+      if (error) {
+         console.error("Insert error:", error.message, error.details, error.hint);
+        return toast.error("Gagal menambahkan aturan");
+      }
       toast.success("Aturan ditambahkan");
     }
 
     setForm({ id: null, title: "", description: "", level: "" });
+    fetchRules();
   };
 
   const handleEdit = (item) => setForm(item);
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm("Hapus aturan ini?")) {
-      const updated = rules.filter((r) => r.id !== id);
-      saveRules(updated);
+      const { error } = await supabase.from("loyalty_rules").delete().eq("id", id);
+      if (error) return toast.error("Gagal menghapus aturan");
       toast.success("Aturan dihapus");
+      fetchRules();
     }
   };
 

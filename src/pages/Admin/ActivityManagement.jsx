@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
-import toast from 'react-hot-toast';
-
-const dummyReminders = [
-  { id: 1, customerName: "Ibu Sari", eventDate: "2025-06-25", message: "Halo Ibu Sari, ini pengingat untuk acara catering pada tanggal 25 Juni 2025.", isDraft: false },
-  { id: 2, customerName: "Bapak Ahmad", eventDate: "2025-07-01", message: "Jangan lupa pesanan tumpeng untuk acara keluarga Anda.", isDraft: false },
-  { id: 3, customerName: "Bu Lina", eventDate: "2025-07-10", message: "Pesanan snack box Anda akan diantar pada tanggal 10 Juli.", isDraft: false },
-  { id: 4, customerName: "Pak Rudi", eventDate: "2025-07-12", message: "Reminder untuk pemesanan nasi kotak di hari Sabtu.", isDraft: true },
-  { id: 5, customerName: "Mbak Tika", eventDate: "2025-07-15", message: "Pengingat pemesanan untuk acara arisan minggu depan.", isDraft: true },
-];
+import toast from "react-hot-toast";
+import { supabase } from "../../supabase"; // pastikan path ini sesuai
 
 const ActivityManagement = () => {
   const [reminder, setReminder] = useState({
@@ -17,58 +10,115 @@ const ActivityManagement = () => {
     message: "",
     isDraft: false
   });
-
+  
   const [reminders, setReminders] = useState([]);
   const [filterDate, setFilterDate] = useState("");
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("reminders")) || [];
-    if (stored.length === 0) {
-      localStorage.setItem("reminders", JSON.stringify(dummyReminders));
-      setReminders(dummyReminders);
-    } else {
-      setReminders(stored);
-    }
+    fetchReminders();
   }, []);
+
+  const fetchReminders = async () => {
+    const { data, error } = await supabase
+      .from("reminders")
+      .select("*")
+      .order("event_date", { ascending: true });
+
+    if (error) {
+      toast.error("Gagal memuat pengingat");
+      console.error(error);
+    } else {
+      setReminders(data);
+    }
+  };
 
   const handleChange = (e) => {
     setReminder({ ...reminder, [e.target.name]: e.target.value });
   };
 
-  const saveToStorage = (updated) => {
-    setReminders(updated);
-    localStorage.setItem("reminders", JSON.stringify(updated));
-  };
-
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
-    const updated = editMode
-      ? reminders.map((r) => (r.id === reminder.id ? { ...reminder, isDraft: false } : r))
-      : [...reminders, { ...reminder, id: Date.now(), isDraft: false }];
-    saveToStorage(updated);
-    toast.success(editMode ? "Pengingat diperbarui dan dikirim!" : "Pengingat berhasil dikirim!");
+    const payload = {
+      customer_name: reminder.customerName,
+      event_date: reminder.eventDate,
+      message: reminder.message,
+      is_draft: false,
+    };
+
+    if (editMode && reminder.id) {
+      const { error } = await supabase
+        .from("reminders")
+        .update(payload)
+        .eq("id", reminder.id);
+      if (error) {
+        toast.error("Gagal memperbarui dan mengirim");
+      } else {
+        toast.success("Pengingat diperbarui dan dikirim!");
+      }
+    } else {
+      const { error } = await supabase.from("reminders").insert([payload]);
+      if (error) {
+        toast.error("Gagal mengirim pengingat");
+      } else {
+        toast.success("Pengingat berhasil dikirim!");
+      }
+    }
+
     resetForm();
+    fetchReminders();
   };
 
-  const handleSaveDraft = () => {
-    const updated = editMode
-      ? reminders.map((r) => (r.id === reminder.id ? { ...reminder, isDraft: true } : r))
-      : [...reminders, { ...reminder, id: Date.now(), isDraft: true }];
-    saveToStorage(updated);
-    toast.success("Disimpan sebagai draf.");
+  const handleSaveDraft = async () => {
+    const payload = {
+      customer_name: reminder.customerName,
+      event_date: reminder.eventDate,
+      message: reminder.message,
+      is_draft: true,
+    };
+
+    if (editMode && reminder.id) {
+      const { error } = await supabase
+        .from("reminders")
+        .update(payload)
+        .eq("id", reminder.id);
+      if (error) {
+        toast.error("Gagal memperbarui draf");
+      } else {
+        toast.success("Draf diperbarui");
+      }
+    } else {
+      const { error } = await supabase.from("reminders").insert([payload]);
+      if (error) {
+        toast.error("Gagal menyimpan draf");
+      } else {
+        toast.success("Disimpan sebagai draf");
+      }
+    }
+
     resetForm();
+    fetchReminders();
   };
 
   const handleEdit = (r) => {
-    setReminder(r);
+    setReminder({
+      id: r.id,
+      customerName: r.customer_name,
+      eventDate: r.event_date,
+      message: r.message,
+      isDraft: r.is_draft,
+    });
     setEditMode(true);
   };
 
-  const handleDelete = (id) => {
-    const updated = reminders.filter((r) => r.id !== id);
-    saveToStorage(updated);
-    toast.success("Pengingat dihapus.");
+  const handleDelete = async (id) => {
+    const { error } = await supabase.from("reminders").delete().eq("id", id);
+    if (error) {
+      toast.error("Gagal menghapus pengingat");
+    } else {
+      toast.success("Pengingat dihapus");
+      fetchReminders();
+    }
   };
 
   const resetForm = () => {
@@ -77,10 +127,10 @@ const ActivityManagement = () => {
   };
 
   const filteredReminders = filterDate
-    ? reminders.filter((r) => r.eventDate === filterDate && !r.isDraft)
-    : reminders.filter((r) => !r.isDraft);
+    ? reminders.filter((r) => r.event_date === filterDate && !r.is_draft)
+    : reminders.filter((r) => !r.is_draft);
 
-  const drafts = reminders.filter((r) => r.isDraft);
+  const drafts = reminders.filter((r) => r.is_draft);
 
   return (
     <div className="bg-[url('/bg-batik-light.png')] bg-fixed bg-cover min-h-screen py-0 px-0">

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { supabase } from "../../supabase";
 
 const levelStyle = {
   Gold: "bg-yellow-100 text-yellow-700",
@@ -13,21 +14,50 @@ const Kontak = () => {
   const [editId, setEditId] = useState(null);
 
   useEffect(() => {
-    fetch("https://api.npoint.io/9ade4bf30f88c5b7e1dd")
-      .then((res) => res.json())
-      .then((data) => setDataPelanggan(data.slice(0, 15)))
-      .catch((e) => console.error("Gagal ambil data:", e));
+    const fetchData = async () => {
+      const { data, error } = await supabase.from("pelanggan").select("*").order("id", { ascending: true });
+      if (error) {
+        console.error("Gagal ambil data:", error.message);
+        toast.error("Gagal mengambil data");
+      } else {
+        setDataPelanggan(data);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newList = editId
-      ? dataPelanggan.map((p) => (p.id === editId ? { ...form, id: editId } : p))
-      : [...dataPelanggan, { ...form, id: Date.now() }];
-    setDataPelanggan(newList);
-    toast.success(editId ? "Data pelanggan diperbarui!" : "Pelanggan baru ditambahkan!");
+    if (editId) {
+      // Update
+      const { error } = await supabase
+        .from("pelanggan")
+        .update(form)
+        .eq("id", editId);
+      if (error) {
+        toast.error("Gagal update data!");
+      } else {
+        toast.success("Data pelanggan diperbarui!");
+        setEditId(null);
+      }
+    } else {
+      // Tambah
+      const { error } = await supabase
+        .from("pelanggan")
+        .insert([{ ...form }]);
+      if (error) {
+        toast.error("Gagal tambah data!");
+      } else {
+        toast.success("Pelanggan baru ditambahkan!");
+      }
+    }
+
+    // Reset form dan refresh data
     setForm({ nama: "", kontak: "", alamat: "", level: "Bronze" });
-    setEditId(null);
+
+    const { data, error: fetchError } = await supabase.from("pelanggan").select("*").order("id", { ascending: true });
+    if (!fetchError) setDataPelanggan(data);
   };
 
   const handleEdit = (p) => {
@@ -35,16 +65,24 @@ const Kontak = () => {
     setEditId(p.id);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm("Hapus pelanggan ini?")) {
-      setDataPelanggan(dataPelanggan.filter((p) => p.id !== id));
-      toast.success("Pelanggan berhasil dihapus!");
-      if (editId === id) {
-        setForm({ nama: "", kontak: "", alamat: "", level: "Bronze" });
-        setEditId(null);
+      const { error } = await supabase.from("pelanggan").delete().eq("id", id);
+      if (error) {
+        toast.error("Gagal hapus data!");
+      } else {
+        toast.success("Pelanggan berhasil dihapus!");
+        if (editId === id) {
+          setForm({ nama: "", kontak: "", alamat: "", level: "Bronze" });
+          setEditId(null);
+        }
+
+        const { data, error: fetchError } = await supabase.from("pelanggan").select("*").order("id", { ascending: true });
+        if (!fetchError) setDataPelanggan(data);
       }
     }
   };
+
 
   return (
     <div className="min-h-screen bg-[#FDF6E3] py-10 px-6">
