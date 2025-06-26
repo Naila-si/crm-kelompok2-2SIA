@@ -124,7 +124,6 @@ export default function Menu() {
     if (window.confirm(`Hapus paket "${paket.name}"?`)) {
       setPaketMenus((prev) => prev.filter((item) => item.id !== paket.id));
       toast.success("Paket berhasil dihapus!");
-      // setLastUpdated(new Date());
     }
   };
 
