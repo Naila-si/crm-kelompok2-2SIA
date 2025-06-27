@@ -1,14 +1,71 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../../supabase";
 
 const Beranda = () => {
   const navigate = useNavigate();
+  const [menuUnggulan, setMenuUnggulan] = useState([]);
+  const [testimoni, setTestimoni] = useState([]);
+
+  useEffect(() => {
+    const fetchMenu = async () => {
+      const { data, error } = await supabase.from("menu_unggulan").select("*");
+      if (error) {
+        console.error("Gagal ambil data menu:", error.message);
+      } else {
+        setMenuUnggulan(data);
+      }
+    };
+    fetchMenu();
+  }, []);
+
+  useEffect(() => {
+    const fetchTestimoni = async () => {
+      const { data, error } = await supabase.from("testimoni").select("*");
+      if (error) {
+        console.error("Gagal ambil testimoni:", error.message);
+      } else {
+        setTestimoni(data);
+      }
+    };
+    fetchTestimoni();
+  }, []);
 
   return (
-    <div className="font-sans text-gray-800">
+    <div className="font-sans text-gray-800 bg-[#fff8f0]">
+      {/* Navbar */}
+      <header className="bg-white shadow sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
+          <div
+            onClick={() => navigate("/")}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            <img src="/logo.png" alt="Logo" className="h-10" />
+            <span className="font-bold text-[#9C2D2D] text-lg">Selera Kampung</span>
+          </div>
+          <nav className="flex gap-6 text-sm font-semibold text-[#5D3A1A]">
+            {[
+              { label: "Beranda", path: "/" },
+              { label: "Menu", path: "/informasi-menu" },
+              { label: "Pesanan", path: "/order-management" },
+              { label: "Tracking", path: "/tracking" },
+              { label: "Kontak", path: "/tracking" },
+            ].map((item, i) => (
+              <button
+                key={i}
+                onClick={() => navigate(item.path)}
+                className="hover:text-[#9C2D2D] transition"
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section
-        className="h-[80vh] bg-cover bg-center flex items-center justify-center text-white text-center px-4"
+        className="h-[85vh] bg-cover bg-center flex items-center justify-center text-white text-center px-4"
         style={{
           backgroundImage:
             "url('https://s1-id.alongwalker.co/wp-content/uploads/2024/07/image-top-10-pilihan-catering-di-pekanbaru-riau-buat-acara-maupun-harian-manakah-yang-paling-enak-dan-murah-62258e4294ff1f402c284956a551228f.jpg')",
@@ -18,11 +75,31 @@ const Beranda = () => {
           <img src="/logo.png" alt="Logo" className="mx-auto mb-4 h-20" />
           <h1 className="text-4xl font-extrabold">Food Catering Service</h1>
           <p className="mt-2 text-lg font-medium">Nikmati layanan catering sesuai kebutuhanmu!</p>
+          <button
+            onClick={() => navigate('/informasi-menu')}
+            className="mt-6 bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-full font-semibold text-lg shadow-md"
+          >
+            Pesan Sekarang
+          </button>
         </div>
       </section>
 
-      {/* Our Services */}
+     {/* Tentang Kami */}
       <section className="py-20 px-6 bg-white text-center">
+        <h2 className="text-4xl font-extrabold text-orange-700 mb-6">Tentang Kami</h2>
+        <p className="text-gray-700 max-w-3xl mx-auto mb-6">
+          Selera Kampung Pekanbaru adalah layanan katering yang menyajikan menu rumahan khas Indonesia dengan rasa autentik dan pelayanan terbaik untuk harian maupun acara spesial Anda.
+        </p>
+        <button
+          onClick={() => navigate('/tentang-kami')}
+          className="mt-2 bg-orange-600 hover:bg-orange-700 text-white px-5 py-2 rounded-full text-sm"
+        >
+          Lihat Selengkapnya
+        </button>
+      </section>
+
+      {/* Our Services */}
+      <section className="py-20 px-6 bg-[#fff4eb] text-center">
         <h2 className="text-4xl font-extrabold mb-4 text-orange-600">Our Services</h2>
         <p className="text-gray-600 max-w-2xl mx-auto mb-12">
           Kami menyediakan layanan cepat dan informatif seputar menu, harga, dan pemesanan,
@@ -52,13 +129,13 @@ const Beranda = () => {
               icon: "💬",
               title: "Customer Support",
               desc: "Kami siap bantu Anda 24/7.",
-              action: null,
+              action: () => navigate('/support'),
             },
             {
               icon: "🧑‍🍳",
               title: "Konsultasi Catering",
               desc: "Bantu pilih menu terbaik sesuai acara Anda.",
-              action: null,
+              action: () => navigate('/konsultasi'),
             },
           ].map((service, i) => (
             <div
@@ -74,66 +151,80 @@ const Beranda = () => {
         </div>
       </section>
 
-      {/* Popular Orders */}
+      {/* Menu Unggulan */}
       <section className="py-20 px-6 bg-gradient-to-br from-orange-50 to-white">
-        <h2 className="text-4xl font-extrabold text-center text-orange-700 mb-10">Popular Orders</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {[
-            {
-              name: "Udang Saus Thai",
-              price: "Rp 25.000",
-              image: "https://dlinacatering.com/wp-content/uploads/2012/05/udang-mayonnaise.jpg",
-            },
-            {
-              name: "Goreng Ati Ampela",
-              price: "Rp 18.000",
-              image: "https://asset.kompas.com/crops/chbuyJr95kXOjX87OzwiCXb4spY=/0x295:750x795/1200x800/data/photo/2021/05/25/60ac66ba41720.jpg",
-            },
-            {
-              name: "Sayur Asem",
-              price: "Rp 12.000",
-              image: "https://graciacatering.com/wp-content/uploads/2020/05/Sayur-asem.jpg",
-            },
-          ].map((item, i) => (
+        <h2 className="text-4xl font-extrabold text-center text-orange-700 mb-10">Menu Unggulan</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+          {menuUnggulan.map((item, i) => (
             <div
               key={i}
               className="bg-white rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 overflow-hidden"
             >
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full h-52 object-cover"
-              />
+              <img src={item.gambar_url} alt={item.nama} className="w-full h-52 object-cover" />
               <div className="p-5">
-                <h3 className="text-xl font-semibold">{item.name}</h3>
-                <p className="text-orange-600 font-bold">{item.price}</p>
+                <h3 className="text-xl font-semibold">{item.nama}</h3>
+                <p className="text-orange-600 font-bold">{item.harga}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Feedback Section */}
+      {/* Promo Info */}
+      <section className="py-16 px-6 bg-[#fff1e8] text-center">
+        <h2 className="text-4xl font-extrabold text-orange-700 mb-6">Promo Spesial!</h2>
+        <p className="text-lg text-gray-700 mb-6 max-w-2xl mx-auto">
+          Dapatkan potongan 10% untuk pesanan pertama kamu! Gunakan kode: <span className="font-bold">SELERA10</span>
+        </p>
+        <button className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full shadow text-sm">
+          Lihat Semua Promo
+        </button>
+      </section>
+
+      {/* Testimoni */}
       <section className="py-20 px-6 bg-orange-100">
-        <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-10">Feedback From Customers</h2>
+        <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-10">Apa Kata Pelanggan</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          {[
-            {
-              name: "Christine",
-              message: "Makanannya enak, pengirimannya cepat, dan pelayanannya sangat ramah!",
-            },
-            {
-              name: "Dodi",
-              message: "Rekomendasi terbaik untuk acara kantor, semua puas dengan makanannya!",
-            },
-          ].map((fb, i) => (
+          {testimoni.map((fb, i) => (
             <div key={i} className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition duration-300">
-              <p className="italic mb-4 text-gray-700">"{fb.message}"</p>
-              <p className="font-bold text-right text-orange-600">- {fb.name}</p>
+              <p className="italic mb-4 text-gray-700">"{fb.pesan}"</p>
+              <p className="font-bold text-right text-orange-600">- {fb.nama}</p>
             </div>
           ))}
         </div>
       </section>
+
+      {/* Footer + Contact Us */}
+      <footer className="bg-[#2d2d2d] text-white py-12 px-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h4 className="text-xl font-semibold mb-4">Selera Kampung</h4>
+            <p className="text-sm text-gray-300">
+              Layanan catering Pekanbaru yang siap menemani harimu, dari makanan harian hingga acara spesial.
+            </p>
+          </div>
+          <div>
+            <h4 className="text-xl font-semibold mb-4">Navigasi</h4>
+            <ul className="space-y-2 text-sm text-gray-300">
+              <li><button onClick={() => navigate('/')}>Beranda</button></li>
+              <li><button onClick={() => navigate('/informasi-menu')}>Menu</button></li>
+              <li><button onClick={() => navigate('/order-management')}>Pesanan</button></li>
+              <li><button onClick={() => navigate('/tracking')}>Tracking</button></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-xl font-semibold mb-4">FAQ / Contact</h4>
+            <form className="flex flex-col space-y-3">
+              <select className="p-2 rounded text-black">
+                <option value="faq">Tanya FAQ</option>
+                <option value="lapor">Laporkan Masalah</option>
+              </select>
+              <input type="text" placeholder="Pesan Anda" className="p-2 rounded text-black" />
+              <button className="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded text-sm">Kirim</button>
+            </form>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

@@ -9,7 +9,6 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Menu from './pages/Admin/Menu';
 import ActivityManagement from './pages/Admin/ActivityManagement';
-import SocialMediaMarketing from './pages/Admin/SocialMediaMarketing';
 import Akun from './pages/Akun';
 import Kontak from './pages/Admin/Kontak';
 import LeadManagement from './pages/Admin/LeadManagement';
@@ -51,7 +50,6 @@ function App() {
           <Route path="/menu" element={<Menu />} />
           <Route path="/activity" element={<ActivityManagement />} />
           <Route path="/activity-management" element={<ActivityManagement />} />
-          <Route path="/social-media" element={<SocialMediaMarketing />} />
           <Route path="/akun" element={<Akun />} />
           <Route path="/follow-up" element={<LeadManagement />} />
           <Route path="/faq" element={<KnowledgeBase />} />

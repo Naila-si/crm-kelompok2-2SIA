@@ -32,7 +32,6 @@ const menuItems = [
   // { name: "Follow Up", icon: <Lightbulb />, path: "/lead", soon: true },
   { name: "Follow Up", icon: <Lightbulb />, path: "/follow-up" },
   { name: "Pengingat", icon: <CalendarClock />, path: "/activity" },
-  { name: "Promo Sosmed", icon: <Megaphone />, path: "/social-media" },
   { name: "Pengaturan FAQ", icon: <FaQuestion />, path: "/faq" },
   { name: "Pengaturan Promo", icon: <BsPercent />, path: "/promo" },
   { name: "Pengaturan Loyalty Pelanggan", icon: <MdLoyalty />, path: "/loyalty" },
