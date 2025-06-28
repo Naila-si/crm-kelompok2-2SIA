@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -24,6 +26,26 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) {
+      navigate("/login");
+    } else {
+      setIsReady(true);
+    }
+  }, [navigate]);
+
+  if (!isReady) {
+    return (
+      <div className="min-h-screen flex justify-center items-center text-[#8B4513] font-semibold">
+        Memuat Dashboard...
+      </div>
+    );
+  }
+
   const stats = [
     {
       label: "Pesanan Hari Ini",
@@ -57,7 +79,7 @@ const Dashboard = () => {
       {
         label: "Jumlah Pesanan",
         data: [240, 320, 400, 420, 500, 620, 710, 780, 860, 930, 1000, 1120],
-        backgroundColor: "#A02B2B", // Merah marun
+        backgroundColor: "#A02B2B",
         borderRadius: 6,
       },
     ],
@@ -83,8 +105,8 @@ const Dashboard = () => {
       {
         label: "Jumlah Pelanggan",
         data: [120, 150, 180, 220, 250, 300, 360, 400, 430, 470, 520, 580],
-        borderColor: "#5E3B1E", // Coklat
-        backgroundColor: "rgba(94, 59, 30, 0.2)", // Coklat transparan
+        borderColor: "#5E3B1E",
+        backgroundColor: "rgba(94, 59, 30, 0.2)",
         fill: true,
         tension: 0.4,
         pointRadius: 4,
@@ -116,10 +138,7 @@ const Dashboard = () => {
       {/* Statistik */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat, index) => (
-          <div
-            key={index}
-            className={`rounded-xl shadow p-5 ${stat.color}`}
-          >
+          <div key={index} className={`rounded-xl shadow p-5 ${stat.color}`}>
             <p className="text-sm font-semibold">{stat.label}</p>
             <div className="flex items-center justify-between mt-2">
               <h2 className="text-xl font-bold">{stat.value}</h2>
