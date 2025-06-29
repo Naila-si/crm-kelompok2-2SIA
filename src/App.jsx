@@ -7,7 +7,7 @@ import SalesManagement from './pages/Admin/SalesManagement';
 import Pesanan from './pages/Admin/Pesanan';
 import Menu from './pages/Admin/Menu';
 import ActivityManagement from './pages/Admin/ActivityManagement';
-import Akun from './pages/Akun'; // kalau ini di luar Admin/User
+import Akun from './pages/Akun';
 import Kontak from './pages/Admin/Kontak';
 import Lacak from './pages/Admin/Lacak';
 import LeadManagement from './pages/Admin/LeadManagement';
@@ -22,6 +22,8 @@ import Beranda from './pages/User/Beranda';
 import InformasiMenu from './pages/User/InformasiMenu';
 import OrderManagement from './pages/User/OrderManagement';
 import TrackingDelivery from './pages/User/TrackingDelivery';
+import TentangKami from './pages/User/TentangKami'; // Tambahan
+import CustomerChat from './pages/User/CustomerChat';
 
 function App() {
   const [orders, setOrders] = useState([]);
@@ -36,14 +38,11 @@ function App() {
 
   return (
     <Routes>
-      {/* Redirect awal */}
       <Route path="/" element={<Navigate to="/signin" />} />
-
-      {/* Auth */}
       <Route path="/signin" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      {/* Admin routes */}
+      {/* Admin */}
       {user && user.role === "admin" && (
         <Route element={<MainLayout />}>
           <Route path="/dashboard" element={<Dashboard orders={orders} />} />
@@ -61,13 +60,15 @@ function App() {
         </Route>
       )}
 
-      {/* User routes */}
+      {/* User */}
       {user && user.role === "user" && (
         <>
           <Route path="/beranda" element={<Beranda />} />
           <Route path="/informasi-menu" element={<InformasiMenu />} />
           <Route path="/order-management" element={<OrderManagement />} />
           <Route path="/tracking" element={<TrackingDelivery />} />
+          <Route path="/tentang-kami" element={<TentangKami />} />
+          <Route path="/support" element={<CustomerChat />} />
         </>
       )}
     </Routes>
