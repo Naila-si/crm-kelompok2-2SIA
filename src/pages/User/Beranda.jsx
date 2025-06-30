@@ -6,6 +6,7 @@ const Beranda = () => {
   const navigate = useNavigate();
   const [menuUnggulan, setMenuUnggulan] = useState([]);
   const [testimoni, setTestimoni] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   // 🔐 Cek login otomatis
   useEffect(() => {
@@ -60,6 +61,38 @@ const Beranda = () => {
                 {item.label}
               </button>
             ))}
+            
+            {/* 🔒 Profile Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setShowDropdown((prev) => !prev)}
+                className="ml-4 flex items-center gap-1 hover:text-[#9C2D2D] transition"
+              >
+                <img src="/avatar.png" alt="Profile" className="w-8 h-8 rounded-full border border-orange-300" />
+                <span>Profil</span>
+              </button>
+
+              {/* Dropdown Menu */}
+              {showDropdown && (
+                <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-md z-50">
+                  <button
+                    onClick={() => navigate("/profil")}
+                    className="block w-full text-left px-4 py-2 hover:bg-orange-100"
+                  >
+                    Profil Saya
+                  </button>
+                  <button
+                    onClick={() => {
+                      localStorage.removeItem("user");
+                      navigate("/signin");
+                    }}
+                    className="block w-full text-left px-4 py-2 hover:bg-orange-100 text-red-600"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
           </nav>
         </div>
       </header>

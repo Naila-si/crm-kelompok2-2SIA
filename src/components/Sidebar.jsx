@@ -40,7 +40,7 @@ const menuItems = [
   { name: "Pengaturan FAQ", icon: <FaQuestion />, path: "/faq" },
   { name: "Pengaturan Promo", icon: <BsPercent />, path: "/promo" },
   { name: "Pengaturan Loyalty Pelanggan", icon: <MdLoyalty />, path: "/loyalty" },
-  { name: "Atur 'Menu Unggulan'", icon: <MdMenuBook />, path: "/menu-unggul" },
+  { name: "Testimoni Pelanggan", icon: <MdLoyalty />, path: "/testimoni" },
 ];
 
 const accountItems = [

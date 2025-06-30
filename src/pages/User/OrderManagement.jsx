@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const cart = [
@@ -17,7 +17,18 @@ const OrderManagement = () => {
 
   const navigate = useNavigate();
 
-  const total = cart.reduce((sum, item) => sum + item.qty * item.price, 0);
+  const promo = JSON.parse(localStorage.getItem("promo_aktif"));
+  const [activePromo, setActivePromo] = useState(null);
+
+  useEffect(() => {
+    if (promo) {
+      setActivePromo(promo);
+    }
+  }, []);
+
+  const originalTotal = cart.reduce((sum, item) => sum + item.qty * item.price, 0);
+  const discount = activePromo?.discount || 0;
+  const total = originalTotal - (originalTotal * discount / 100);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -89,7 +100,30 @@ const OrderManagement = () => {
               <span>Rp {(item.qty * item.price).toLocaleString()}</span>
             </div>
           ))}
-          <div className="flex justify-between font-bold text-lg mt-4">
+          {activePromo && (
+            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-4 rounded">
+              <p className="font-semibold">Promo Aktif:</p>
+              <p className="text-sm italic">{activePromo.content}</p>
+              <button
+                onClick={() => {
+                  localStorage.removeItem("promo_aktif");
+                  setActivePromo(null);
+                }}
+                className="mt-2 text-sm text-red-600 hover:underline"
+              >
+                Batalkan Promo
+              </button>
+            </div>
+          )}
+
+          {activePromo?.discount && (
+            <div className="flex justify-between text-sm text-green-700 font-medium mb-2">
+              <span>Diskon ({activePromo.discount}%)</span>
+              <span>- Rp {(originalTotal * activePromo.discount / 100).toLocaleString()}</span>
+            </div>
+          )}
+
+          <div className="flex justify-between font-bold text-lg mt-1">
             <span>Total</span>
             <span>Rp {total.toLocaleString()}</span>
           </div>

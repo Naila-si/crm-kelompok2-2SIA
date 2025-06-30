@@ -27,6 +27,8 @@ import AdminTentangKami from './pages/Admin/AdminTentangKami';
 import AdminNilaiKami from './pages/Admin/AdminNilaiKami';
 import CustomerChat from './pages/User/CustomerChat';
 import AdminMenuUnggulan from './pages/Admin/AdminMenuunggulan';
+import Promo from './pages/User/Promo';
+import AdminTestimoni from './pages/Admin/AdminTestimoni';
 
 function App() {
   const [orders, setOrders] = useState([]);
@@ -63,6 +65,7 @@ function App() {
           <Route path="/tentang" element={<AdminTentangKami />} />
           <Route path="/visimisi" element={<AdminNilaiKami />} />
           <Route path="/menu-unggul" element={<AdminMenuUnggulan />} />
+          <Route path="/testimoni" element={<AdminTestimoni />} />
         </Route>
       )}
 
@@ -75,6 +78,7 @@ function App() {
           <Route path="/tracking" element={<TrackingDelivery />} />
           <Route path="/tentang-kami" element={<TentangKami />} />
           <Route path="/support" element={<CustomerChat />} />
+          <Route path="/promo" element={<Promo />} />
         </>
       )}
     </Routes>
