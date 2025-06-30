@@ -55,14 +55,6 @@ const TentangKami = () => {
           <h2 className="text-3xl font-bold text-orange-700 mb-6">
             Siapa Kami?
           </h2>
-          <p className="text-gray-700 text-lg leading-relaxed mb-10">
-            Selera Kampung hadir sebagai solusi layanan katering yang menyajikan
-            makanan rumahan khas Indonesia dengan cita rasa autentik dan
-            pelayanan yang hangat. Kami melayani kebutuhan catering untuk
-            kegiatan harian, acara keluarga, hingga kebutuhan kantor dan
-            instansi di Pekanbaru.
-          </p>
-
           <div className="grid md:grid-cols-3 gap-8 text-left">
             {[
               {
