@@ -1,8 +1,29 @@
-import React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../../supabase";
+import { useEffect } from "react";
 
 const TentangKami = () => {
   const navigate = useNavigate();
+  const [dataNilai, setDataNilai] = useState([]);
+
+  useEffect(() => {
+    const fetchNilaiKami = async () => {
+      const { data, error } = await supabase.from("nilai_kami").select("*");
+      if (!error) setDataNilai(data);
+    };
+    fetchNilaiKami();
+  }, []);
+
+  const [dataTentang, setDataTentang] = useState([]);
+
+  useEffect(() => {
+    const fetchTentangKami = async () => {
+      const { data, error } = await supabase.from("tentang_kami").select("*");
+      if (!error) setDataTentang(data);
+    };
+    fetchTentangKami();
+  }, []);
 
   return (
     <div className="font-sans text-gray-800 bg-[#fff8f0]">
@@ -24,7 +45,7 @@ const TentangKami = () => {
               { label: "Menu", path: "/informasi-menu" },
               { label: "Pesanan", path: "/order-management" },
               { label: "Tracking", path: "/tracking" },
-              { label: "Tentang", path: "/tentang-kami" },
+              { label: "Kontak", path: "/kontak" },
             ].map((item, i) => (
               <button
                 key={i}
@@ -52,37 +73,35 @@ const TentangKami = () => {
       {/* Konten Tentang Kami */}
       <section className="py-20 px-6 bg-white text-center">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-orange-700 mb-6">
-            Siapa Kami?
+          {dataTentang.length > 0 ? (
+            dataTentang.map((item) => (
+              <div key={item.id} className="mb-10">
+                <h2 className="text-3xl font-bold text-orange-700 mb-6">{item.judul}</h2>
+                <img src={item.gambar_url} alt="Tentang Kami" className="w-full h-64 object-cover rounded-xl mb-6" />
+                <p className="text-gray-700 text-lg leading-relaxed">{item.deskripsi}</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-400 italic">Memuat informasi...</p>
+          )}
+
+
+          <h2 className="text-2xl font-bold text-orange-700 mt-16 mb-10">
+            Nilai Kami 💡
           </h2>
           <div className="grid md:grid-cols-3 gap-8 text-left">
-            {[
-              {
-                title: "🌿 Misi Kami",
-                content:
-                  "Memberikan pengalaman kuliner terbaik melalui makanan sehat, higienis, dan pelayanan cepat.",
-              },
-              {
-                title: "📍 Komitmen",
-                content:
-                  "Kami berkomitmen untuk menjaga kualitas rasa, bahan baku lokal, dan kepuasan pelanggan.",
-              },
-              {
-                title: "👨‍🍳 Tim Kami",
-                content:
-                  "Dibalik dapur, ada tim chef dan staf profesional yang penuh dedikasi dalam menyajikan rasa terbaik.",
-              },
-            ].map((item, index) => (
-              <div key={index} className="bg-orange-50 p-6 rounded-xl shadow">
+            {dataNilai.map((item) => (
+              <div key={item.id} className="bg-gradient-to-br from-orange-50 to-white p-6 rounded-2xl shadow hover:shadow-md transition duration-300">
+                <div className="text-4xl mb-4">{item.icon}</div>
                 <h3 className="text-xl font-semibold text-orange-700 mb-2">
                   {item.title}
                 </h3>
-                <p className="text-gray-700">{item.content}</p>
+                <p className="text-gray-700 text-sm leading-relaxed">{item.content}</p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
+          </div>
+        </section>
 
       {/* Call to Action */}
       <section className="py-12 bg-[#fff4eb] text-center">
@@ -111,16 +130,19 @@ const TentangKami = () => {
             <h4 className="text-xl font-semibold mb-4">Navigasi</h4>
             <ul className="space-y-2 text-sm text-gray-300">
               <li>
-                <button onClick={() => navigate("/")}>Beranda</button>
+                <button onClick={() => navigate("/")} className="hover:text-orange-500 focus:text-orange-700 transition duration-200">Beranda</button>
               </li>
               <li>
-                <button onClick={() => navigate("/informasi-menu")}>Menu</button>
+                <button onClick={() => navigate("/informasi-menu")} className="hover:text-orange-500 focus:text-orange-700 transition duration-200">Menu</button>
               </li>
               <li>
-                <button onClick={() => navigate("/order-management")}>Pesanan</button>
+                <button onClick={() => navigate("/order-management")} className="hover:text-orange-500 focus:text-orange-700 transition duration-200">Pesanan</button>
               </li>
               <li>
-                <button onClick={() => navigate("/tracking")}>Tracking</button>
+                <button onClick={() => navigate("/tracking")} className="hover:text-orange-500 focus:text-orange-700 transition duration-200">Tracking</button>
+              </li>
+              <li>
+                <button onClick={() => navigate("/kontak")} className="hover:text-orange-500 focus:text-orange-700 transition duration-200">Kontak</button>
               </li>
             </ul>
           </div>

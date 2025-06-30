@@ -18,6 +18,7 @@ const Beranda = () => {
     };
     fetchMenu();
   }, []);
+  
 
   useEffect(() => {
     const fetchTestimoni = async () => {
@@ -137,6 +138,12 @@ const Beranda = () => {
               desc: "Bantu pilih menu terbaik sesuai acara Anda.",
               action: () => navigate('/konsultasi'),
             },
+            {
+              icon: "📢",
+              title: "Promo & Diskon",
+              desc: "Lihat promo menarik & penawaran spesial.",
+              action: () => navigate('/promo'),
+            },
           ].map((service, i) => (
             <div
               key={i}
@@ -176,7 +183,7 @@ const Beranda = () => {
         <p className="text-lg text-gray-700 mb-6 max-w-2xl mx-auto">
           Dapatkan potongan 10% untuk pesanan pertama kamu! Gunakan kode: <span className="font-bold">SELERA10</span>
         </p>
-        <button className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full shadow text-sm">
+        <button onClick={() => navigate("/promo")} className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full shadow text-sm">
           Lihat Semua Promo
         </button>
       </section>
@@ -206,22 +213,28 @@ const Beranda = () => {
           <div>
             <h4 className="text-xl font-semibold mb-4">Navigasi</h4>
             <ul className="space-y-2 text-sm text-gray-300">
-              <li><button onClick={() => navigate('/')}>Beranda</button></li>
-              <li><button onClick={() => navigate('/informasi-menu')}>Menu</button></li>
-              <li><button onClick={() => navigate('/order-management')}>Pesanan</button></li>
-              <li><button onClick={() => navigate('/tracking')}>Tracking</button></li>
+              <li><button onClick={() => navigate('/')} className="hover:text-orange-500 focus:text-orange-700 transition duration-200">Beranda</button></li>
+              <li><button onClick={() => navigate('/informasi-menu')} className="hover:text-orange-500 focus:text-orange-700 transition duration-200">Menu</button></li>
+              <li><button onClick={() => navigate('/order-management')} className="hover:text-orange-500 focus:text-orange-700 transition duration-200">Pesanan</button></li>
+              <li><button onClick={() => navigate('/tracking')} className="hover:text-orange-500 focus:text-orange-700 transition duration-200">Tracking</button></li>
+              <li><button onClick={() => navigate('/kontak')} className="hover:text-orange-500 focus:text-orange-700 transition duration-200">Kontak</button></li>
             </ul>
           </div>
           <div>
             <h4 className="text-xl font-semibold mb-4">FAQ / Contact</h4>
             <form className="flex flex-col space-y-3">
-              <select className="p-2 rounded text-black">
+              <select className="p-2 rounded bg-white text-black">
+                <input type="text" className="p-2 rounded bg-white text-black" />
                 <option value="faq">Tanya FAQ</option>
                 <option value="lapor">Laporkan Masalah</option>
               </select>
-              <input type="text" placeholder="Pesan Anda" className="p-2 rounded text-black" />
+              <input type="text" placeholder="Pesan Anda" className="p-2 rounded bg-white text-black" />
               <button className="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded text-sm">Kirim</button>
             </form>
+             <div>
+            <p className="text-sm text-gray-300">Whatsapp: 0812-3456-7890</p>
+            <p className="text-sm text-gray-300">Email: info@selerakampung.id</p>
+          </div>
           </div>
         </div>
       </footer>

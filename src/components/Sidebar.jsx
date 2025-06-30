@@ -1,3 +1,6 @@
+import { MdMenuBook } from "react-icons/md"; 
+import { MdStarRate } from "react-icons/md"; 
+import { FcAbout } from "react-icons/fc"; 
 import { MdLoyalty } from "react-icons/md"; 
 import { BsPercent } from "react-icons/bs"; 
 import { FaQuestion } from "react-icons/fa"; 
@@ -26,6 +29,8 @@ import { Link, useLocation } from "react-router-dom";
 
 const menuItems = [
   { name: "Dashboard", icon: <LayoutDashboard />, path: "/dashboard" },
+  { name: "Pengaturan 'Tentang Kami'", icon: <FcAbout />, path: "/tentang" },
+  { name: "Pengaturan 'Visi & Misi'", icon: <MdStarRate/>, path: "/visimisi" },
   { name: "Daftar Pesanan", icon: <ClipboardList />, path: "/pesanan" },
   { name: "Kontak Pelanggan", icon: <Users />, path: "/kontak" },
   { name: "Daftar Menu", icon: <MdRestaurantMenu />, path: "/menu" },
@@ -35,6 +40,7 @@ const menuItems = [
   { name: "Pengaturan FAQ", icon: <FaQuestion />, path: "/faq" },
   { name: "Pengaturan Promo", icon: <BsPercent />, path: "/promo" },
   { name: "Pengaturan Loyalty Pelanggan", icon: <MdLoyalty />, path: "/loyalty" },
+  { name: "Atur 'Menu Unggulan'", icon: <MdMenuBook />, path: "/menu-unggul" },
 ];
 
 const accountItems = [

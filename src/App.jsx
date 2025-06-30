@@ -23,7 +23,10 @@ import InformasiMenu from './pages/User/InformasiMenu';
 import OrderManagement from './pages/User/OrderManagement';
 import TrackingDelivery from './pages/User/TrackingDelivery';
 import TentangKami from './pages/User/TentangKami'; // Tambahan
+import AdminTentangKami from './pages/Admin/AdminTentangKami'; // Tambahan
+import AdminNilaiKami from './pages/Admin/AdminNilaiKami';
 import CustomerChat from './pages/User/CustomerChat';
+import AdminMenuUnggulan from './pages/Admin/AdminMenuunggulan';
 
 function App() {
   const [orders, setOrders] = useState([]);
@@ -57,6 +60,9 @@ function App() {
           <Route path="/faq" element={<KnowledgeBase />} />
           <Route path="/promo" element={<TriggerMarketing />} />
           <Route path="/loyalty" element={<LoyaltyManagement />} />
+          <Route path="/tentang" element={<AdminTentangKami />} />
+          <Route path="/visimisi" element={<AdminNilaiKami />} />
+          <Route path="/menu-unggul" element={<AdminMenuUnggulan />} />
         </Route>
       )}
 
