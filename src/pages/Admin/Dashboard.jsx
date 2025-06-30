@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -27,24 +27,13 @@ ChartJS.register(
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (!storedUser) {
-      navigate("/login");
-    } else {
-      setIsReady(true);
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user || user.role !== "admin") {
+      navigate("/login", { replace: true });
     }
   }, [navigate]);
-
-  if (!isReady) {
-    return (
-      <div className="min-h-screen flex justify-center items-center text-[#8B4513] font-semibold">
-        Memuat Dashboard...
-      </div>
-    );
-  }
 
   const stats = [
     {

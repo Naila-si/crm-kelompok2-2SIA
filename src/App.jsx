@@ -22,8 +22,8 @@ import Beranda from './pages/User/Beranda';
 import InformasiMenu from './pages/User/InformasiMenu';
 import OrderManagement from './pages/User/OrderManagement';
 import TrackingDelivery from './pages/User/TrackingDelivery';
-import TentangKami from './pages/User/TentangKami'; // Tambahan
-import AdminTentangKami from './pages/Admin/AdminTentangKami'; // Tambahan
+import TentangKami from './pages/User/TentangKami';
+import AdminTentangKami from './pages/Admin/AdminTentangKami';
 import AdminNilaiKami from './pages/Admin/AdminNilaiKami';
 import CustomerChat from './pages/User/CustomerChat';
 import AdminMenuUnggulan from './pages/Admin/AdminMenuunggulan';
@@ -40,9 +40,9 @@ function App() {
   }, []);
 
   return (
-    <Routes>
+    <Routes key={user?.email || "guest"}>
       <Route path="/" element={<Navigate to="/signin" />} />
-      <Route path="/signin" element={<Login />} />
+      <Route path="/signin" element={<Login setUser={setUser} />} />
       <Route path="/register" element={<Register />} />
 
       {/* Admin */}

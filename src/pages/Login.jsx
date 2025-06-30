@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import InputField from "../components/InputField";
 import { useNavigate } from "react-router-dom";
 
-function Login() {
+function Login({ setUser }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
@@ -22,15 +22,17 @@ function Login() {
     const account = dummyAccounts[form.email];
 
     if (account && form.password === account.password) {
+      const userData = {
+        email: form.email,
+        role: account.role,
+        level: account.level || null,
+      };
+
       // Simpan ke localStorage
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          email: form.email,
-          role: account.role,
-          level: account.level || null,
-        })
-      );
+      localStorage.setItem("user", JSON.stringify(userData));
+
+      // Update state global di App
+      if (setUser) setUser(userData);
 
       alert("Login berhasil!");
 
