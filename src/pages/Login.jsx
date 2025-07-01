@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import InputField from "../components/InputField";
+import InputField from "../components/Admin/InputField";
 import { useNavigate } from "react-router-dom";
 
 function Login({ setUser }) {

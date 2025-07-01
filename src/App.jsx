@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 import Dashboard from './pages/Admin/Dashboard';
-import MainLayout from './components/MainLayout';
+import MainLayout from './components/Admin/MainLayout';
 import SalesManagement from './pages/Admin/SalesManagement';
 import Pesanan from './pages/Admin/Pesanan';
 import Menu from './pages/Admin/Menu';

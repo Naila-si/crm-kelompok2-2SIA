@@ -27,22 +27,17 @@ const KnowledgeBase = () => {
     fetchFaqs();
   }, []);
 
-  const handleSubmit = async (e) => {
-    if (e?.preventDefault) e.preventDefault();
+  const handleSubmit = async (mode = "publish") => {
     if (!form.question || !form.answer) return;
 
     const payload = {
       question: form.question,
       answer: form.answer,
-      is_draft: submitMode === "draft",
+      is_draft: mode === "draft",
     };
 
     if (form.id !== null) {
-      const { error } = await supabase
-        .from("faqs")
-        .update(payload)
-        .eq("id", form.id);
-
+      const { error } = await supabase.from("faqs").update(payload).eq("id", form.id);
       if (error) return toast.error("Gagal memperbarui FAQ");
       toast.success(payload.is_draft ? "Draft diperbarui" : "FAQ diperbarui");
     } else {
@@ -52,7 +47,6 @@ const KnowledgeBase = () => {
     }
 
     setForm({ id: null, question: "", answer: "", isDraft: false });
-    setSubmitMode("publish");
     fetchFaqs();
   };
 
@@ -128,20 +122,14 @@ const KnowledgeBase = () => {
           <div className="flex gap-2">
             <button
               type="button"
-              onClick={() => {
-                setSubmitMode("publish");
-                handleSubmit();
-              }}
+              onClick={() => handleSubmit("publish")}
               className="bg-[#D2691E] text-white py-2 px-4 rounded hover:bg-[#A0522D]"
             >
               {form.id ? "Update FAQ" : "Tambah FAQ"}
             </button>
             <button
               type="button"
-              onClick={() => {
-                setSubmitMode("draft");
-                handleSubmit();
-              }}
+              onClick={() => handleSubmit("draft")}
               className="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600"
             >
               {form.id ? "Simpan sebagai Draft" : "Tambah Draft"}

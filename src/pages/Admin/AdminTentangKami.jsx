@@ -4,8 +4,9 @@ import toast from "react-hot-toast";
 
 const AdminTentangKami = () => {
   const [data, setData] = useState([]);
-  const [form, setForm] = useState({ judul: "", deskripsi: "", gambar_url: "" });
+  const [form, setForm] = useState({ judul: "", deskripsi: "", gambar: "" });
   const [editId, setEditId] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
 
   // Ambil data dari Supabase
   const fetchData = async () => {
@@ -23,17 +24,46 @@ const AdminTentangKami = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.judul || !form.deskripsi || !form.gambar_url) return toast.error("Semua field wajib diisi");
+    if (!form.judul || !form.deskripsi) return toast.error("Judul dan Deskripsi wajib diisi");
+
+    let gambar = form.gambar;
+
+    if (imageFile) {
+      const fileName = `${Date.now()}-${imageFile.name}`;
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from("gambar")
+        .upload(fileName, imageFile);
+
+      if (uploadError) {
+        console.error("Upload Gagal:", uploadError.message);
+        toast.error("Upload gambar gagal");
+        return;
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("gambar")
+        .getPublicUrl(fileName);
+
+      gambar = urlData.publicUrl;
+      console.log("URL Gambar:", gambar);
+    }
+
+    const payload = {
+      judul: form.judul,
+      deskripsi: form.deskripsi,
+      gambar,
+    };
 
     if (editId) {
-      const { error } = await supabase.from("tentang_kami").update(form).eq("id", editId);
+      const { error } = await supabase.from("tentang_kami").update(payload).eq("id", editId);
       if (!error) toast.success("Berhasil update!");
     } else {
-      const { error } = await supabase.from("tentang_kami").insert([form]);
+      const { error } = await supabase.from("tentang_kami").insert([payload]);
       if (!error) toast.success("Berhasil tambah!");
     }
 
-    setForm({ judul: "", deskripsi: "", gambar_url: "" });
+    setForm({ judul: "", deskripsi: "", gambar: "" });
+    setImageFile(null);
     setEditId(null);
     fetchData();
   };
@@ -71,10 +101,9 @@ const AdminTentangKami = () => {
           className="w-full p-3 rounded border mb-4"
         />
         <input
-          type="text"
-          placeholder="URL Gambar"
-          value={form.gambar_url}
-          onChange={(e) => setForm({ ...form, gambar_url: e.target.value })}
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImageFile(e.target.files[0])}
           className="w-full p-3 rounded border mb-4"
         />
         <button className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700">
@@ -86,7 +115,9 @@ const AdminTentangKami = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {data.map((item) => (
           <div key={item.id} className="bg-white rounded-2xl shadow hover:shadow-lg p-4">
-            <img src={item.gambar_url} alt="Tentang Kami" className="w-full h-48 object-cover rounded mb-4" />
+            <img src={item.gambar} alt="Tentang Kami" 
+            onError={() => console.log("Gagal load:", item.gambar)}
+            className="w-full h-48 object-cover rounded mb-4" />
             <h2 className="text-xl font-bold text-orange-700">{item.judul}</h2>
             <p className="text-gray-700 mt-2">{item.deskripsi}</p>
             <div className="mt-4 flex gap-3">

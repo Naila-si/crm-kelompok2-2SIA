@@ -1,48 +1,63 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-
-const dummyLeads = [
-  {
-    id: 1,
-    nama: "Rina",
-    status: "Baru",
-    catatan: "Belum pernah pesan sebelumnya."
-  },
-  {
-    id: 2,
-    nama: "Andi",
-    status: "Pasif",
-    catatan: "Terakhir pesan 3 bulan lalu."
-  },
-  {
-    id: 3,
-    nama: "Dewi",
-    status: "Komplain",
-    catatan: "Komplain soal pengiriman lambat."
-  }
-];
+import { supabase } from "../../supabase";
 
 const LeadManagement = () => {
   const [leads, setLeads] = useState([]);
 
   useEffect(() => {
-    // Simulasi fetch data
-    setLeads(dummyLeads);
+    fetchLeads();
   }, []);
 
-  const handleFollowUp = (id) => {
-    const updated = leads.map((lead) =>
-      lead.id === id ? { ...lead, status: "Di-follow-up" } : lead
-    );
-    setLeads(updated);
-    toast.success("Pelanggan telah difollow-up!");
+  const fetchLeads = async () => {
+    const { data, error } = await supabase.from("leads").select("*");
+    if (error) toast.error("Gagal memuat data");
+    else setLeads(data);
   };
+
+  const handleFollowUp = async (id) => {
+    const { error } = await supabase
+      .from("leads")
+      .update({ status: "Di-follow-up" })
+      .eq("id", id);
+    if (!error) {
+      toast.success("Lead di-follow-up!");
+      fetchLeads();
+    } else {
+      toast.error("Gagal update status");
+    }
+  };
+
 
   return (
     <div className="max-w-3xl mx-auto mt-10 bg-[#FDF6E3] rounded-lg shadow p-6">
       <h2 className="text-2xl font-bold text-[#5E3B1E] border-orange-300 mb-6 font-serif">
         Follow Up
       </h2>
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const newLead = {
+            nama: form.nama.value,
+            catatan: form.catatan.value,
+          };
+          const { error } = await supabase.from("leads").insert([newLead]);
+          if (!error) {
+            toast.success("Lead ditambahkan!");
+            form.reset();
+            fetchLeads();
+          } else {
+            toast.error("Gagal menambah lead");
+          }
+        }}
+        className="mb-4"
+      >
+        <input name="nama" required placeholder="Nama" className="border p-2 mr-2" />
+        <input name="catatan" required placeholder="Catatan" className="border p-2 mr-2" />
+        <button className="bg-green-500 text-white px-4 py-2 rounded">Tambah</button>
+      </form>
+
       <table className="min-w-full text-sm">
         <thead>
           <tr className="bg-orange-100 text-left">
