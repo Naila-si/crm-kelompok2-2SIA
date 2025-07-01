@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { supabase } from "../../supabase";
 import toast from "react-hot-toast";
 
@@ -8,6 +8,8 @@ const KnowledgeBase = () => {
   const [expandedId, setExpandedId] = useState(null);
   const [filter, setFilter] = useState("all");
   const [submitMode, setSubmitMode] = useState("publish");
+
+  const hasShownToast = useRef(false); // ✅ penanda toast
 
   const fetchFaqs = async () => {
     const { data, error } = await supabase
@@ -20,6 +22,13 @@ const KnowledgeBase = () => {
       console.error("Fetch error:", error);
     } else {
       setFaqs(data);
+      const newQuestions = data.filter((faq) => faq.is_draft && !faq.answer);
+
+      // ✅ Hanya munculkan toast satu kali
+      if (!hasShownToast.current && newQuestions.length > 0) {
+        toast.success(`📩 Ada ${newQuestions.length} pertanyaan baru belum dijawab!`);
+        hasShownToast.current = true;
+      }
     }
   };
 

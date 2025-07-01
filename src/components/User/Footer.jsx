@@ -1,8 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../../supabase";
+import toast from "react-hot-toast"; // Pastikan kamu sudah install react-hot-toast
 
 const Footer = () => {
   const navigate = useNavigate();
+  const [faqMessage, setFaqMessage] = useState("");
+
+  const handleFaqSubmit = async (e) => {
+    e.preventDefault();
+    if (!faqMessage.trim()) {
+      toast.error("Pesan tidak boleh kosong!");
+      return;
+    }
+
+    const { error } = await supabase.from("faqs").insert([
+      {
+        question: faqMessage,
+        answer: "",
+        is_draft: true, // status pertanyaan baru
+      },
+    ]);
+
+    if (error) {
+      toast.error("Gagal mengirim pertanyaan.");
+      console.error(error);
+    } else {
+      toast.success("Pertanyaan berhasil dikirim!");
+      setFaqMessage("");
+    }
+  };
 
   return (
     <footer className="bg-[#2d2d2d] text-white py-12 px-6">
@@ -25,13 +52,20 @@ const Footer = () => {
         </div>
         <div>
           <h4 className="text-xl font-semibold mb-4">FAQ / Contact</h4>
-          <form className="flex flex-col space-y-3">
-            <select className="p-2 rounded bg-white text-black">
-              <option value="faq">Tanya FAQ</option>
-              <option value="lapor">Laporkan Masalah</option>
-            </select>
-            <input type="text" placeholder="Pesan Anda" className="p-2 rounded bg-white text-black" />
-            <button className="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded text-sm">Kirim</button>
+          <form onSubmit={handleFaqSubmit} className="flex flex-col space-y-3">
+            <input
+              type="text"
+              placeholder="Pertanyaan Anda"
+              className="p-2 rounded bg-white text-black"
+              value={faqMessage}
+              onChange={(e) => setFaqMessage(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded text-sm"
+            >
+              Kirim Pertanyaan
+            </button>
           </form>
           <div className="mt-4">
             <p className="text-sm text-gray-300">Whatsapp: 0812-3456-7890</p>

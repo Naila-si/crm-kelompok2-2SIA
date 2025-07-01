@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase";
-import Footer from "../../components/User/Footer";
 import UserLayout from "../../components/User/UserLayout";
+import Testimoni from "../../components/User/Testimoni";
 
 const Beranda = () => {
   const navigate = useNavigate();
@@ -42,6 +42,40 @@ const Beranda = () => {
     fetchTestimoni();
   }, []);
 
+  const [user, setUser] = useState(null);
+  // Ambil data user dari localStorage saat mount
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (!storedUser) {
+      navigate("/login", { replace: true });
+    } else {
+      setUser(storedUser);
+    }
+  }, [navigate]);
+
+  const crmInfo = {
+    "": {
+      message: "Hai! Kamu pelanggan baru. Yuk mulai belanja dan nikmati keuntungan member!",
+      color: "#bbb",
+    },
+    bronze: {
+      message: "Selamat datang member Bronze! Dapatkan promo menarik setiap minggu!",
+      color: "#CD7F32",
+    },
+    silver: {
+      message: "Halo member Silver! Kamu dapat akses kupon spesial dan diskon tambahan!",
+      color: "#C0C0C0",
+    },
+    gold: {
+      message: "Welcome Gold Member! Nikmati diskon eksklusif dan akses prioritas event!",
+      color: "#FFD700",
+    },
+  };
+
+  const crmLevel = user?.level ?? "";
+  const crmMessage = crmInfo[crmLevel]?.message ?? "";
+  const crmColor = crmInfo[crmLevel]?.color ?? "#bbb";
+
   return (
     <div className="font-sans text-gray-800 bg-[#fff8f0]">
       <UserLayout>
@@ -65,6 +99,35 @@ const Beranda = () => {
             </button>
           </div>
         </section>
+
+        {/* CRM Info Section */}
+        {user && (
+          <section className="py-8 px-6 bg-gradient-to-br from-orange-200 via-white to-yellow-100 text-center shadow-inner">
+            <div className="inline-block bg-white px-8 py-6 rounded-2xl border border-orange-300 shadow-lg hover:shadow-2xl transition-all duration-300 max-w-xl w-full">
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <span className="text-xl">👋</span>
+                <h3 className="text-xl font-bold" style={{ color: crmColor }}>
+                  Halo, {user.name}!
+                </h3>
+                {crmLevel && (
+                  <span
+                    className={`text-xs font-semibold uppercase px-3 py-1 rounded-full shadow-sm`}
+                    style={{
+                      backgroundColor: crmColor,
+                      color: crmLevel === "gold" ? "#000" : "#fff",
+                    }}
+                  >
+                    {crmLevel === "bronze" && "🥉 Bronze"}
+                    {crmLevel === "silver" && "🥈 Silver"}
+                    {crmLevel === "gold" && "🥇 Gold"}
+                    {crmLevel === "" && "Pelanggan Baru"}
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-gray-700 animate-pulse">{crmMessage}</p>
+            </div>
+          </section>
+        )}
 
         {/* Tentang Kami */}
         <section className="py-20 px-6 bg-white text-center">
@@ -171,22 +234,7 @@ const Beranda = () => {
             Lihat Semua Promo
           </button>
         </section>
-
-        {/* Testimoni */}
-        <section className="py-20 px-6 bg-orange-100">
-          <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-10">Apa Kata Pelanggan</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {testimoni.map((fb, i) => (
-              <div
-                key={i}
-                className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition duration-300"
-              >
-                <p className="italic mb-4 text-gray-700">"{fb.pesan}"</p>
-                <p className="font-bold text-right text-orange-600">- {fb.nama}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        <Testimoni testimoni={testimoni} />
       </UserLayout>
     </div>
   );

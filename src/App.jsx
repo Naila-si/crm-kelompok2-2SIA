@@ -29,7 +29,7 @@ import CustomerChat from './pages/User/CustomerChat';
 import AdminMenuUnggulan from './pages/Admin/AdminMenuunggulan';
 import Promo from './pages/User/Promo';
 import AdminTestimoni from './pages/Admin/AdminTestimoni';
-
+import Profil from './components/User/profil';
 function App() {
   const [orders, setOrders] = useState([]);
   const [user, setUser] = useState(null);
@@ -79,6 +79,7 @@ function App() {
           <Route path="/tentang-kami" element={<TentangKami />} />
           <Route path="/support" element={<CustomerChat />} />
           <Route path="/promo" element={<Promo />} />
+          <Route path="/profil" element={<Profil />} />
         </>
       )}
     </Routes>

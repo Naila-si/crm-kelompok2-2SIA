@@ -12,7 +12,6 @@ import toast, { Toaster } from "react-hot-toast";
 import { supabase } from "../../supabase";
 
 const categories = ["Semua", "Makanan", "Makanan Ringan", "Minuman", "Dessert"];
-
 export default function Menu() {
   const [menus, setMenus] = useState([]);
   const [paketMenus, setPaketMenus] = useState([]);
@@ -20,6 +19,31 @@ export default function Menu() {
   const [searchTerm, setSearchTerm] = useState("");
   const [editMenu, setEditMenu] = useState(null);
   const [detailMenu, setDetailMenu] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editPaket, setEditPaket] = useState(null);
+  const [detailPaket, setDetailPaket] = useState(null);
+
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) setUser(storedUser);
+  }, []);
+
+  const getHargaSetelahDiskon = (harga) => {
+    if (typeof harga !== "number") return 0; // 🛑 tambahkan ini
+    if (!user?.level) return harga;
+    switch (user.level) {
+      case "bronze":
+        return harga * 0.95;
+      case "silver":
+        return harga * 0.9;
+      case "gold":
+        return harga * 0.85;
+      default:
+        return harga;
+    }
+  };
+
 
   const filteredMenus = menus.filter(
     (menu) =>
@@ -59,7 +83,6 @@ export default function Menu() {
 
     fetchPakets();
   }, []);
-
 
   const handleAddMenu = async (e) => {
     e.preventDefault();
@@ -156,6 +179,58 @@ export default function Menu() {
     return publicData.publicUrl;
   };
 
+  const [menuUnggulan, setMenuUnggulan] = useState([]);
+
+  useEffect(() => {
+    const fetchUnggulan = async () => {
+      const { data, error } = await supabase.from("menu_unggulan").select("*");
+      if (error) toast.error("Gagal memuat menu unggulan");
+      else setMenuUnggulan(data);
+    };
+
+    fetchUnggulan();
+  }, []);
+
+
+  const handleSetMenuUnggulan = async (menu) => {
+    if (isSubmitting) return; // cegah double click
+    setIsSubmitting(true);
+
+    const unggulan = {
+      nama: menu.name,
+      harga: menu.price,
+      gambar_url: menu.image,
+    };
+
+    const { error } = await supabase.from("menu_unggulan").insert([unggulan]);
+
+    if (error) {
+      toast.error("Gagal menjadikan menu unggulan");
+      console.error(error);
+    } else {
+      toast.success(`"${menu.name}" jadi Menu Unggulan!`);
+    }
+
+    setIsSubmitting(false);
+  };
+
+  const handleDeleteMenuUnggulan = async (id) => {
+    if (!window.confirm("Yakin ingin menghapus menu unggulan ini?")) return;
+
+    const { error } = await supabase.from("menu_unggulan").delete().eq("id", id);
+    if (error) toast.error("Gagal menghapus menu unggulan");
+    else {
+      toast.success("Berhasil dihapus dari menu unggulan");
+      setMenuUnggulan(menuUnggulan.filter((item) => item.id !== id));
+    }
+  };
+
+  const filteredMenuUnggulan = menuUnggulan.filter((item) => {
+    if (!item.level) return true; // tampilkan semua jika tidak ada level khusus
+    return item.level === user?.level;
+  });
+
+
   const handleAddPaket = async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -187,6 +262,14 @@ export default function Menu() {
     if (!fetchErr) setPaketMenus(updated);
   };
 
+  const handleEditPaket = (paket) => {
+    setEditPaket(paket);
+  };
+
+  const handleDetailPaket = (paket) => {
+    setDetailPaket(paket);
+  };
+
   const handleDeletePaket = async (paket) => {
     if (!window.confirm(`Hapus paket "${paket.name}"?`)) return;
 
@@ -197,9 +280,48 @@ export default function Menu() {
     setPaketMenus((prev) => prev.filter((item) => item.id !== paket.id));
   };
 
+  const handleUpdatePaket = async (e, id) => {
+    e.preventDefault();
+    const form = e.target;
+    const file = form.imageFile.files[0];
+    let imageUrl = editPaket.image;
+
+    if (file) {
+      const uploadedUrl = await uploadImage(file);
+      if (uploadedUrl) imageUrl = uploadedUrl;
+    }
+
+    const updatedPaket = {
+      name: form.name.value,
+      items: form.items.value.split(",").map((item) => item.trim()),
+      price: parseInt(form.price.value),
+      image: imageUrl,
+    };
+
+    const { error } = await supabase.from("pakets").update(updatedPaket).eq("id", id);
+    if (error) toast.error("Gagal memperbarui paket");
+    else {
+      toast.success("Paket berhasil diperbarui!");
+      setEditPaket(null);
+      form.reset();
+      const { data, error: fetchErr } = await supabase.from("pakets").select("*");
+      if (!fetchErr) setPaketMenus(data);
+    }
+  };
+
+  const handleDeleteAllMenuUnggulan = async () => {
+    if (!window.confirm("Yakin ingin menghapus semua menu unggulan?")) return;
+
+    const { error } = await supabase.from("menu_unggulan").delete().neq("id", 0);
+    if (error) toast.error("Gagal menghapus semua menu unggulan");
+    else {
+      toast.success("Semua menu unggulan berhasil dihapus");
+      setMenuUnggulan([]);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-cover bg-center flex flex-col items-center" style={{ backgroundImage: 'url("/background.jpg")' }}>
-      <Toaster position="top-right" reverseOrder={false} />
       <div className="bg-white bg-opacity-95 rounded-xl shadow-lg w-full max-w-[1440px] mx-auto p-6">
         <h1 className="text-4xl font-bold text-center text-amber-800 mb-2">Manajemen Informasi Menu & Harga</h1>
         <p className="text-center text-gray-600 mb-8">Halaman ini berguna untuk menambahkan, mengedit, atau menghapus informasi menu dan harga sesuai kebutuhan pelanggan</p>
@@ -285,39 +407,43 @@ export default function Menu() {
           </div>
         </form>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          {filteredMenus.map((menu) => (
-            <div key={menu.id} className="p-4 border border-amber-200 rounded-xl shadow bg-gradient-to-b from-yellow-50 to-white">
-              {menu.image && (
-                <img
-                  src={menu.image}
-                  alt={menu.name}
-                  onError={(e) => (e.target.src = "https://via.placeholder.com/150")}
-                  className="w-full h-48 object-cover rounded-lg mb-2"
-                />
-              )}
-              <div className="flex items-center mb-2">{renderIcon(menu.category)}<h3 className="text-lg font-semibold text-amber-900">{menu.name}</h3></div>
-              <p className="text-sm text-gray-500 mb-2">{menu.category}</p>
-              <div className="flex justify-between items-center mt-2">
-                <div className="font-bold text-green-600">Rp {menu.price.toLocaleString()}</div>
-                <div className="flex gap-2">
-                  <button onClick={() => handleEdit(menu)} className="text-sm text-blue-600 hover:underline">Edit</button>
-                  <button onClick={() => handleDelete(menu)} className="text-sm text-red-600 hover:underline">Hapus</button>
-                  <button onClick={() => handleDetail(menu)} className="text-sm text-amber-700 hover:underline">Detail</button>
+          {filteredMenus.map((menu) => {
+            const harga = getHargaSetelahDiskon(menu.price);
+            return (
+              <div key={menu.id} className="p-4 border ...">
+                <div className="flex items-center mb-2">
+                  {renderIcon(menu.category)}
+                  <h3 className="text-lg font-semibold text-amber-900">{menu.name}</h3>
+                </div>
+                <p className="text-sm text-gray-500 mb-2">{menu.category}</p>
+                <div className="flex justify-between items-center mt-2">
+                  <p className="text-sm font-bold text-green-700">
+                    Rp {(harga != null ? harga : 0).toLocaleString()}
+                  </p>
+                  <div className="flex gap-2 justify-end">
+                    <button onClick={() => handleEdit(menu)} className="text-sm text-blue-600 hover:underline">Edit</button>
+                    <button onClick={() => handleDelete(menu)} className="text-sm text-red-600 hover:underline">Hapus</button>
+                  </div>
+                  <div className="flex gap-2 justify-end">
+                    <button onClick={() => handleDetail(menu)} className="text-sm text-amber-700 hover:underline">Detail</button>
+                    <button onClick={() => handleSetMenuUnggulan(menu)} className="text-sm text-amber-600 hover:underline">Jadikan Menu Unggulan</button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
-      </div>
 
-      <h2 className="text-2xl font-semibold text-amber-700 mb-4 mt-12">Paket Menu</h2>
-
-      <form onSubmit={handleAddPaket} className="mb-8 bg-green-50 p-4 rounded-xl shadow-md max-w-xl mx-auto">
-        <h3 className="text-lg font-bold text-green-800 mb-2">Tambah Paket Menu</h3>
+        {/* Paket */}
+        <h2 className="text-2xl font-semibold text-amber-700 mb-4 mt-12">Paket Menu</h2>
+        {/* Form Tambah/Edit Paket */}
+      <form onSubmit={editPaket ? (e) => handleUpdatePaket(e, editPaket.id) : handleAddPaket} className="mb-8 bg-green-50 p-4 rounded-xl shadow-md max-w-xl mx-auto">
+        <h3 className="text-lg font-bold text-green-800 mb-2">{editPaket ? "Edit Paket Menu" : "Tambah Paket Menu"}</h3>
 
         <input
           type="text"
           name="name"
+          defaultValue={editPaket?.name || ""}
           placeholder="Nama Paket"
           className="w-full mb-2 px-4 py-2 border rounded"
           required
@@ -325,6 +451,7 @@ export default function Menu() {
         <input
           type="text"
           name="items"
+          defaultValue={Array.isArray(editPaket?.items) ? editPaket.items.join(", ") : ""}
           placeholder="Isi Paket (pisahkan dengan koma)"
           className="w-full mb-2 px-4 py-2 border rounded"
           required
@@ -332,6 +459,7 @@ export default function Menu() {
         <input
           type="number"
           name="price"
+          defaultValue={editPaket?.price || ""}
           placeholder="Harga Paket"
           className="w-full mb-2 px-4 py-2 border rounded"
           required
@@ -343,9 +471,16 @@ export default function Menu() {
           className="w-full mb-4 px-4 py-2 border rounded"
         />
 
-        <button type="submit" className="bg-green-700 text-white py-2 px-4 rounded hover:bg-green-800">
-          Tambah Paket
-        </button>
+        <div className="flex justify-between">
+          <button type="submit" className="bg-green-700 text-white py-2 px-4 rounded hover:bg-green-800">
+            {editPaket ? "Simpan Perubahan" : "Tambah Paket"}
+          </button>
+          {editPaket && (
+            <button type="button" onClick={() => setEditPaket(null)} className="text-red-600 hover:underline">
+              Batal Edit
+            </button>
+          )}
+        </div>
       </form>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         {paketMenus.map((paket) => (
@@ -359,15 +494,50 @@ export default function Menu() {
             <p className="text-sm text-gray-600 mb-1">
               Isi: {Array.isArray(paket.items) ? paket.items.join(", ") : paket.items}
             </p>
-            <p className="text-sm font-bold text-green-700">Rp {paket.price.toLocaleString()}</p>
+              {user?.level ? (
+                <p className="text-sm text-gray-500 line-through">Rp {paket.price.toLocaleString()}</p>
+              ) : null}
+              <p className="text-sm font-bold text-green-700">
+                Rp {(getHargaSetelahDiskon(paket.price) || 0).toLocaleString()}
+              </p>
+            <div className="flex gap-2 mt-2">
+              <button onClick={() => handleEditPaket(paket)} className="text-sm text-blue-600 hover:underline">Edit</button>
+              <button onClick={() => handleDetailPaket(paket)} className="text-sm text-amber-700 hover:underline">Detail</button>
+              <button onClick={() => handleDeletePaket(paket)} className="text-sm text-red-600 hover:underline">Hapus</button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Menu Unggulan */}
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={handleDeleteAllMenuUnggulan}
+          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 text-sm"
+        >
+          Hapus Semua Menu Unggulan
+        </button>
+      </div>
+      <h2 className="text-2xl font-semibold text-amber-700 mb-4 mt-12">Menu Unggulan</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        {filteredMenuUnggulan.map((item) => (
+          <div key={item.id} className="p-4 border border-amber-200 rounded-xl shadow bg-gradient-to-b from-yellow-50 to-white">
+            <img
+              src={item.gambar_url || "https://via.placeholder.com/150"}
+              alt={item.nama}
+              className="w-full h-48 object-cover rounded-lg mb-2"
+            />
+            <h3 className="text-lg font-semibold text-amber-900">{item.nama}</h3>
+            <p className="text-sm font-bold text-green-700">Rp {item.harga.toLocaleString()}</p>
             <button
-              onClick={() => handleDeletePaket(paket)}
+              onClick={() => handleDeleteMenuUnggulan(item.id)}
               className="mt-2 text-sm text-red-600 hover:underline"
             >
-              Hapus
+              Hapus dari Unggulan
             </button>
           </div>
         ))}
+      </div>
       </div>
     </div>
   );
