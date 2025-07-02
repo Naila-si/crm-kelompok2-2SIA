@@ -31,7 +31,7 @@ const TentangKami = () => {
       <UserLayout>
         {/* Hero Section */}
         <section className="h-[60vh] bg-cover bg-center flex items-center justify-center text-white text-center px-4"
-          style={{ backgroundImage: "url('/hero-tentang.jpg')" }}>
+          style={{ backgroundImage: "url('https://s1-id.alongwalker.co/wp-content/uploads/2024/07/image-top-10-pilihan-catering-di-pekanbaru-riau-buat-acara-maupun-harian-manakah-yang-paling-enak-dan-murah-62258e4294ff1f402c284956a551228f.jpg'" }}>
           <div className="bg-black/60 p-10 rounded-2xl max-w-2xl shadow-xl">
             <h1 className="text-4xl font-extrabold mb-2">Tentang Kami</h1>
             <p className="text-lg font-medium">
@@ -47,7 +47,7 @@ const TentangKami = () => {
               dataTentang.map((item) => (
                 <div key={item.id} className="mb-10">
                   <h2 className="text-3xl font-bold text-orange-700 mb-6">{item.judul}</h2>
-                  <img src={item.gambar_url} alt="Tentang Kami" className="w-full h-64 object-cover rounded-xl mb-6" />
+                  <img src={item.gambar} alt="Tentang Kami" className="w-full h-64 object-cover rounded-xl mb-6" />
                   <p className="text-gray-700 text-lg leading-relaxed">{item.deskripsi}</p>
                 </div>
               ))

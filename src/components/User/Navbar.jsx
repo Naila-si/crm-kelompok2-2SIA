@@ -3,6 +3,12 @@ import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
+  let avatarSrc = "/profil.png";
+
+  if (user?.email === "admin@gmail.com") avatarSrc = "/Ikon Perempuan.jpg";
+  else if (user?.email === "user1@gmail.com") avatarSrc = "/Ikon Perempuan2.jpg";
+  else if (user?.email === "user2@gmail.com") avatarSrc = "/Ikon Laki-Laki.png";
   const [showDropdown, setShowDropdown] = useState(false);
 
   return (
@@ -15,9 +21,9 @@ const Navbar = () => {
         <nav className="flex gap-6 text-sm font-semibold text-[#5D3A1A]">
           {[
             { label: "Beranda", path: "/" },
+            { label: "Tentang Kami", path: "/tentang-kami" },
             { label: "Menu", path: "/informasi-menu" },
-            { label: "Pesanan", path: "/order-management" },
-            { label: "Tracking", path: "/tracking" },
+            { label: "Promo", path: "/promo" },
           ].map((item, i) => (
             <button key={i} onClick={() => navigate(item.path)} className="hover:text-[#9C2D2D] transition">
               {item.label}
@@ -29,7 +35,7 @@ const Navbar = () => {
               onClick={() => setShowDropdown((prev) => !prev)}
               className="ml-4 flex items-center gap-1 hover:text-[#9C2D2D] transition"
             >
-              <img src="/avatar.png" alt="Profile" className="w-8 h-8 rounded-full border border-orange-300" />
+              <img src={avatarSrc} alt="Profile" className="w-8 h-8 rounded-full border border-orange-300" />
               <span>Profil</span>
             </button>
 

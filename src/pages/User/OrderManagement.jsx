@@ -8,6 +8,7 @@ const cart = [
 ];
 
 const OrderManagement = () => {
+  const [step, setStep] = useState(1);
   const [form, setForm] = useState({
     nama: '',
     phone: '',
@@ -22,9 +23,7 @@ const OrderManagement = () => {
   const [activePromo, setActivePromo] = useState(null);
 
   useEffect(() => {
-    if (promo) {
-      setActivePromo(promo);
-    }
+    if (promo) setActivePromo(promo);
   }, []);
 
   const originalTotal = cart.reduce((sum, item) => sum + item.qty * item.price, 0);
@@ -42,7 +41,7 @@ const OrderManagement = () => {
   return (
     <div className="font-sans bg-[#FFFDF7] text-[#3c2c22] min-h-screen">
       <UserLayout>
-        {/* Hero/Header */}
+        {/* Header */}
         <section
           className="h-[70vh] bg-cover bg-center flex items-center justify-center text-white text-center px-4"
           style={{
@@ -52,104 +51,131 @@ const OrderManagement = () => {
         >
           <div className="bg-black/60 p-10 rounded-2xl shadow-xl max-w-xl">
             <img src="/logo.png" alt="Logo" className="h-20 mx-auto mb-4" />
-            <h1 className="text-4xl font-extrabold">Formulir Pemesanan</h1>
-            <p className="mt-2 text-lg font-medium">Lengkapi data dan konfirmasi pesanan Anda.</p>
+            <h1 className="text-4xl font-extrabold">
+              {step === 1 ? 'Ringkasan Pesanan' : 'Formulir Pemesanan'}
+            </h1>
+            <p className="mt-2 text-lg font-medium">
+              {step === 1
+                ? 'Periksa kembali pesanan Anda sebelum lanjut.'
+                : 'Lengkapi data dan konfirmasi pesanan Anda.'}
+            </p>
           </div>
         </section>
 
-        {/* Order Summary */}
-        <section className="px-6 py-20 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold mb-6 text-center text-[#9C2D2D]">Ringkasan Pesanan</h2>
-          <div className="bg-white shadow rounded-xl p-6 mb-10">
-            {cart.map((item, i) => (
-              <div key={i} className="flex justify-between border-b py-2">
-                <span>{item.name} x {item.qty}</span>
-                <span>Rp {(item.qty * item.price).toLocaleString()}</span>
-              </div>
-            ))}
-            {activePromo && (
-              <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-4 rounded">
-                <p className="font-semibold">Promo Aktif:</p>
-                <p className="text-sm italic">{activePromo.content}</p>
-                <button
-                  onClick={() => {
-                    localStorage.removeItem("promo_aktif");
-                    setActivePromo(null);
-                  }}
-                  className="mt-2 text-sm text-red-600 hover:underline"
-                >
-                  Batalkan Promo
-                </button>
-              </div>
-            )}
+        {/* STEP 1: Ringkasan Pesanan */}
+        {step === 1 && (
+          <section className="px-6 py-20 max-w-4xl mx-auto">
+            <div className="bg-white shadow rounded-xl p-6 mb-10">
+              {cart.map((item, i) => (
+                <div key={i} className="flex justify-between border-b py-2">
+                  <span>{item.name} x {item.qty}</span>
+                  <span>Rp {(item.qty * item.price).toLocaleString()}</span>
+                </div>
+              ))}
 
-            {activePromo?.discount && (
-              <div className="flex justify-between text-sm text-green-700 font-medium mb-2">
-                <span>Diskon ({activePromo.discount}%)</span>
-                <span>- Rp {(originalTotal * activePromo.discount / 100).toLocaleString()}</span>
-              </div>
-            )}
+              {activePromo && (
+                <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-4 rounded">
+                  <p className="font-semibold">Promo Aktif:</p>
+                  <p className="text-sm italic">{activePromo.content}</p>
+                  <button
+                    onClick={() => {
+                      localStorage.removeItem("promo_aktif");
+                      setActivePromo(null);
+                    }}
+                    className="mt-2 text-sm text-red-600 hover:underline"
+                  >
+                    Batalkan Promo
+                  </button>
+                </div>
+              )}
 
-            <div className="flex justify-between font-bold text-lg mt-1">
-              <span>Total</span>
-              <span>Rp {total.toLocaleString()}</span>
+              {activePromo?.discount && (
+                <div className="flex justify-between text-sm text-green-700 font-medium mb-2">
+                  <span>Diskon ({activePromo.discount}%)</span>
+                  <span>- Rp {(originalTotal * activePromo.discount / 100).toLocaleString()}</span>
+                </div>
+              )}
+
+              <div className="flex justify-between font-bold text-lg mt-1">
+                <span>Total</span>
+                <span>Rp {total.toLocaleString()}</span>
+              </div>
+
+              <button
+                onClick={() => setStep(2)}
+                className="mt-6 w-full bg-[#9C2D2D] text-white font-semibold py-3 rounded hover:bg-[#801c1c] transition"
+              >
+                Lanjutkan ke Formulir Pemesanan
+              </button>
             </div>
-          </div>
+          </section>
+        )}
 
-          {/* Form */}
-          <div className="bg-white shadow rounded-xl p-6 space-y-6">
-            <h3 className="text-xl font-bold mb-4 text-[#5D3A1A]">Data Pemesan</h3>
-            <input
-              type="text"
-              name="nama"
-              placeholder="Nama Lengkap"
-              value={form.nama}
-              onChange={handleChange}
-              className="w-full border rounded px-4 py-2"
-            />
-            <input
-              type="tel"
-              name="phone"
-              placeholder="No. HP"
-              value={form.phone}
-              onChange={handleChange}
-              className="w-full border rounded px-4 py-2"
-            />
-            <textarea
-              name="alamat"
-              placeholder="Alamat Pengantaran"
-              rows={3}
-              value={form.alamat}
-              onChange={handleChange}
-              className="w-full border rounded px-4 py-2"
-            />
-            <textarea
-              name="catatan"
-              placeholder="Catatan Tambahan (opsional)"
-              rows={2}
-              value={form.catatan}
-              onChange={handleChange}
-              className="w-full border rounded px-4 py-2"
-            />
-            <div>
-              <label className="block mb-1 text-sm font-medium">Waktu Pengantaran</label>
+        {/* STEP 2: Formulir Pemesanan */}
+        {step === 2 && (
+          <section className="px-6 py-20 max-w-4xl mx-auto">
+            <div className="bg-white shadow rounded-xl p-6 space-y-6">
+              <h3 className="text-xl font-bold mb-4 text-[#5D3A1A]">Data Pemesan</h3>
               <input
-                type="time"
-                name="waktu"
-                value={form.waktu}
+                type="text"
+                name="nama"
+                placeholder="Nama Lengkap"
+                value={form.nama}
                 onChange={handleChange}
                 className="w-full border rounded px-4 py-2"
               />
-            </div>
+              <input
+                type="tel"
+                name="phone"
+                placeholder="No. HP"
+                value={form.phone}
+                onChange={handleChange}
+                className="w-full border rounded px-4 py-2"
+              />
+              <textarea
+                name="alamat"
+                placeholder="Alamat Pengantaran"
+                rows={3}
+                value={form.alamat}
+                onChange={handleChange}
+                className="w-full border rounded px-4 py-2"
+              />
+              <textarea
+                name="catatan"
+                placeholder="Catatan Tambahan (opsional)"
+                rows={2}
+                value={form.catatan}
+                onChange={handleChange}
+                className="w-full border rounded px-4 py-2"
+              />
+              <div>
+                <label className="block mb-1 text-sm font-medium">Waktu Pengantaran</label>
+                <input
+                  type="time"
+                  name="waktu"
+                  value={form.waktu}
+                  onChange={handleChange}
+                  className="w-full border rounded px-4 py-2"
+                />
+              </div>
 
-            <button
-              onClick={handleSubmit}
-              className="mt-6 w-full bg-[#9C2D2D] text-white font-semibold py-3 rounded hover:bg-[#801c1c] transition"
-            >
-              Pesan Sekarang
-            </button>
-          </div>
-        </section>
+              <div className="flex justify-between mt-4">
+                <button
+                  onClick={() => setStep(1)}
+                  className="text-sm text-blue-600 hover:underline"
+                >
+                  ← Kembali ke Ringkasan
+                </button>
+                <button
+                  onClick={handleSubmit}
+                  className="bg-[#9C2D2D] text-white font-semibold py-3 px-6 rounded hover:bg-[#801c1c] transition"
+                >
+                  Pesan Sekarang
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Testimoni */}
         <section className="py-20 px-6 bg-orange-100">

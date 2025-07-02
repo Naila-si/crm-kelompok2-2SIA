@@ -29,22 +29,6 @@ export default function Menu() {
     if (storedUser) setUser(storedUser);
   }, []);
 
-  const getHargaSetelahDiskon = (harga) => {
-    if (typeof harga !== "number") return 0; // 🛑 tambahkan ini
-    if (!user?.level) return harga;
-    switch (user.level) {
-      case "bronze":
-        return harga * 0.95;
-      case "silver":
-        return harga * 0.9;
-      case "gold":
-        return harga * 0.85;
-      default:
-        return harga;
-    }
-  };
-
-
   const filteredMenus = menus.filter(
     (menu) =>
       (selectedCategory === "Semua" || menu.category === selectedCategory) &&
@@ -67,6 +51,8 @@ export default function Menu() {
 
   const fetchMenus = async () => {
     const { data, error } = await supabase.from("menus").select("*");
+    console.log("✅ DATA:", data);
+    console.log("❌ ERROR:", error);
     if (error) toast.error("Gagal mengambil data menu");
     else setMenus(data);
   };
@@ -74,13 +60,13 @@ export default function Menu() {
   useEffect(() => {
     const fetchPakets = async () => {
       const { data, error } = await supabase.from("pakets").select("*");
+      console.log("Paket data:", data); // Tambahkan ini
       if (error) {
         toast.error("Gagal memuat paket");
         return;
       }
       setPaketMenus(data);
     };
-
     fetchPakets();
   }, []);
 
@@ -100,6 +86,7 @@ export default function Menu() {
       category: form.category.value,
       price: parseInt(form.price.value),
       image: imageUrl,
+      type: "ala-carte",
     };
 
     const { error } = await supabase.from("menus").insert([newMenu]);
@@ -247,6 +234,7 @@ export default function Menu() {
       items: form.items.value.split(",").map((item) => item.trim()),
       price: parseInt(form.price.value),
       image: imageUrl,
+      type: "paket",
     };
 
     const { error } = await supabase.from("pakets").insert([newPaket]);
@@ -326,36 +314,10 @@ export default function Menu() {
         <h1 className="text-4xl font-bold text-center text-amber-800 mb-2">Manajemen Informasi Menu & Harga</h1>
         <p className="text-center text-gray-600 mb-8">Halaman ini berguna untuk menambahkan, mengedit, atau menghapus informasi menu dan harga sesuai kebutuhan pelanggan</p>
 
-        {/* Filter */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-          <div className="relative w-full md:w-1/2">
-            <Search className="absolute left-3 top-2.5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Cari menu ala carte..."
-              className="w-full pl-10 pr-4 py-2 border rounded-xl"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium flex items-center ${selectedCategory === cat ? "bg-amber-700 text-white" : "bg-gray-100 text-gray-700"}`}
-              >
-                <Filter className="w-4 h-4 mr-1" />
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
         {/* Menu Ala Carte */}
         <h2 className="text-2xl font-semibold text-amber-700 mb-4">Menu Ala Carte</h2>
         {/* Form Tambah/Edit Menu Ala Carte */}
-        <form onSubmit={editMenu ? (e) => handleUpdateMenu(e, editMenu.id) : handleAddMenu} className="mb-8 bg-yellow-50 p-4 rounded-xl shadow-md max-w-xl mx-auto">
+        <form onSubmit={editMenu ? (e) => handleUpdateMenu(e, editMenu.id) : handleAddMenu} className="mb-8 bg-yellow-50 p-6 rounded-xl shadow-md max-w-5xl w-full mx-auto">
           <h3 className="text-lg font-bold text-amber-800 mb-2">
             {editMenu ? "Edit Menu Ala Carte" : "Tambah Menu Ala Carte"}
           </h3>
@@ -406,28 +368,59 @@ export default function Menu() {
             )}
           </div>
         </form>
+
+{/* Filter */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+          <div className="relative w-full md:w-1/2">
+            <Search className="absolute left-3 top-2.5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Cari menu ala carte..."
+              className="w-full pl-10 pr-4 py-2 border rounded-xl"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-4 py-2 rounded-xl text-sm font-medium flex items-center ${selectedCategory === cat ? "bg-amber-700 text-white" : "bg-gray-100 text-gray-700"}`}
+              >
+                <Filter className="w-4 h-4 mr-1" />
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {filteredMenus.map((menu) => {
-            const harga = getHargaSetelahDiskon(menu.price);
             return (
-              <div key={menu.id} className="p-4 border ...">
-                <div className="flex items-center mb-2">
+              <div key={menu.id} className="p-4 border border-yellow-200 rounded-xl shadow bg-gradient-to-b from-yellow-50 to-white">
+                <img
+                  src={menu.image || "https://via.placeholder.com/150"}
+                  alt={menu.name}
+                  className="w-full h-48 object-cover rounded-lg mb-2"
+                />
+                <h3 className="text-lg font-semibold text-amber-900 mb-1 text-center">{menu.name}</h3>
+                <div className="flex items-center justify-center mb-1">
                   {renderIcon(menu.category)}
-                  <h3 className="text-lg font-semibold text-amber-900">{menu.name}</h3>
+                  <span className="text-sm text-gray-500">{menu.category}</span>
                 </div>
-                <p className="text-sm text-gray-500 mb-2">{menu.category}</p>
                 <div className="flex justify-between items-center mt-2">
                   <p className="text-sm font-bold text-green-700">
-                    Rp {(harga != null ? harga : 0).toLocaleString()}
+                    Rp {menu.price.toLocaleString()}
                   </p>
                   <div className="flex gap-2 justify-end">
                     <button onClick={() => handleEdit(menu)} className="text-sm text-blue-600 hover:underline">Edit</button>
                     <button onClick={() => handleDelete(menu)} className="text-sm text-red-600 hover:underline">Hapus</button>
                   </div>
-                  <div className="flex gap-2 justify-end">
-                    <button onClick={() => handleDetail(menu)} className="text-sm text-amber-700 hover:underline">Detail</button>
-                    <button onClick={() => handleSetMenuUnggulan(menu)} className="text-sm text-amber-600 hover:underline">Jadikan Menu Unggulan</button>
-                  </div>
+                </div>
+                <div className="flex gap-2 justify-end mt-1">
+                  <button onClick={() => handleDetail(menu)} className="text-sm text-amber-700 hover:underline">Detail</button>
+                  <button onClick={() => handleSetMenuUnggulan(menu)} className="text-sm text-amber-600 hover:underline">Jadikan Menu Unggulan</button>
                 </div>
               </div>
             );
@@ -437,7 +430,7 @@ export default function Menu() {
         {/* Paket */}
         <h2 className="text-2xl font-semibold text-amber-700 mb-4 mt-12">Paket Menu</h2>
         {/* Form Tambah/Edit Paket */}
-      <form onSubmit={editPaket ? (e) => handleUpdatePaket(e, editPaket.id) : handleAddPaket} className="mb-8 bg-green-50 p-4 rounded-xl shadow-md max-w-xl mx-auto">
+      <form onSubmit={editPaket ? (e) => handleUpdatePaket(e, editPaket.id) : handleAddPaket} className="mb-8 bg-green-50 p-4 rounded-xl shadow-md max-5-xl mx-auto">
         <h3 className="text-lg font-bold text-green-800 mb-2">{editPaket ? "Edit Paket Menu" : "Tambah Paket Menu"}</h3>
 
         <input
@@ -494,11 +487,8 @@ export default function Menu() {
             <p className="text-sm text-gray-600 mb-1">
               Isi: {Array.isArray(paket.items) ? paket.items.join(", ") : paket.items}
             </p>
-              {user?.level ? (
-                <p className="text-sm text-gray-500 line-through">Rp {paket.price.toLocaleString()}</p>
-              ) : null}
               <p className="text-sm font-bold text-green-700">
-                Rp {(getHargaSetelahDiskon(paket.price) || 0).toLocaleString()}
+                Rp {paket.price.toLocaleString()}
               </p>
             <div className="flex gap-2 mt-2">
               <button onClick={() => handleEditPaket(paket)} className="text-sm text-blue-600 hover:underline">Edit</button>

@@ -44,10 +44,9 @@ const Footer = () => {
           <h4 className="text-xl font-semibold mb-4">Navigasi</h4>
           <ul className="space-y-2 text-sm text-gray-300">
             <li><button onClick={() => navigate("/")} className="hover:text-orange-500">Beranda</button></li>
-            <li><button onClick={() => navigate("/informasi-menu")} className="hover:text-orange-500">Menu</button></li>
-            <li><button onClick={() => navigate("/order-management")} className="hover:text-orange-500">Pesanan</button></li>
-            <li><button onClick={() => navigate("/tracking")} className="hover:text-orange-500">Tracking</button></li>
-            <li><button onClick={() => navigate("/kontak")} className="hover:text-orange-500">Kontak</button></li>
+            <li><button onClick={() => navigate("/tentang-kami")} className="hover:text-orange-500">Tentang Kami</button></li>
+            <li><button onClick={() => navigate("/inforasi-menu")} className="hover:text-orange-500">Menu</button></li>
+            <li><button onClick={() => navigate("/promo")} className="hover:text-orange-500">Promo</button></li>
           </ul>
         </div>
         <div>

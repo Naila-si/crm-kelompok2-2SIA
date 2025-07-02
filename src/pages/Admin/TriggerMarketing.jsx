@@ -4,7 +4,13 @@ import { supabase } from "../../supabase";
 
 const TriggerMarketing = () => {
   const [posts, setPosts] = useState([]);
-  const [form, setForm] = useState({ id: null, schedule: "", content: "", isDraft: false });
+  const [form, setForm] = useState({
+    id: null,
+    schedule: "",
+    content: "",
+    isDraft: false,
+    kategori: "umum", // default kategori
+  });
   const [filter, setFilter] = useState("all");
   const [promos, setPromos] = useState([]);
 
@@ -52,6 +58,7 @@ const TriggerMarketing = () => {
           content: form.content,
           schedule: form.schedule,
           is_draft: form.isDraft,
+          kategori: form.kategori,
         })
         .eq("id", form.id);
 
@@ -67,6 +74,7 @@ const TriggerMarketing = () => {
           content: form.content,
           schedule: form.schedule,
           is_draft: form.isDraft,
+          kategori: form.kategori,
         },
       ]);
 
@@ -107,7 +115,13 @@ const TriggerMarketing = () => {
       ? posts
       : posts.filter((p) => (filter === "draft" ? p.is_draft : !p.is_draft));
 
-  const [promoForm, setPromoForm] = useState({ id: null, title: "", start: "", end: "" });
+  const [promoForm, setPromoForm] = useState({
+    id: null,
+    title: "",
+    start: "",
+    end: "",
+    kategori: "musim-panas",
+  });
 
   const handlePromoSubmit = async (e) => {
     e.preventDefault();
@@ -120,6 +134,7 @@ const TriggerMarketing = () => {
           title: promoForm.title,
           start: promoForm.start,
           end: promoForm.end,
+          kategori: promoForm.kategori,
         })
         .eq("id", promoForm.id);
 
@@ -135,6 +150,7 @@ const TriggerMarketing = () => {
           title: promoForm.title,
           start: promoForm.start,
           end: promoForm.end,
+          kategori: promoForm.kategori,
         },
       ]);
 
@@ -198,6 +214,18 @@ const TriggerMarketing = () => {
             required
           ></textarea>
 
+          <select
+            value={form.kategori}
+            onChange={(e) => setForm({ ...form, kategori: e.target.value })}
+            className="border border-orange-300 px-4 py-2 rounded"
+            required
+          >
+            <option value="umum">Umum</option>
+            <option value="bronze">Bronze</option>
+            <option value="silver">Silver</option>
+            <option value="gold">Gold</option>
+          </select>
+
           <div className="flex gap-2">
             <button
               type="submit"
@@ -215,6 +243,27 @@ const TriggerMarketing = () => {
             </button>
           </div>
         </form>
+
+        {/* List Konten Promosi */}
+        <div className="space-y-4 mt-10">
+          {filteredPosts.length === 0 ? (
+            <p className="text-sm italic text-gray-500">Belum ada konten.</p>
+          ) : (
+            filteredPosts.map((p) => (
+              <div key={p.id} className="border border-orange-200 p-4 rounded bg-orange-50 shadow-sm">
+                <p className="font-semibold text-orange-900">
+                  {new Date(p.schedule).toLocaleString()} {p.is_draft && <span className="text-sm italic text-gray-500">(Draft)</span>}
+                </p>
+                <p className="mt-2 text-gray-700">{p.content}</p>
+                <p className="mt-1 text-sm text-gray-500 italic">Kategori: {p.kategori || "umum"}</p>
+                <div className="mt-2 space-x-2 text-sm">
+                  <button onClick={() => handleEdit(p)} className="text-blue-600 hover:underline">Edit</button>
+                  <button onClick={() => handleDelete(p.id)} className="text-red-600 hover:underline">Hapus</button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
 
         {/* Seasonal Promo */}
         <div className="mt-16">
@@ -245,6 +294,17 @@ const TriggerMarketing = () => {
                 className="border border-orange-300 px-4 py-2 rounded w-full"
                 required
               />
+             <select
+              value={promoForm.kategori}
+              onChange={(e) => setPromoForm({ ...promoForm, kategori: e.target.value })}
+              className="border border-orange-300 px-4 py-2 rounded w-full"
+              required
+            >
+              <option value="umum">Umum</option>
+              <option value="bronze">Bronze</option>
+              <option value="silver">Silver</option>
+              <option value="gold">Gold</option>
+            </select>
             </div>
             <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-fit">
               {promoForm.id ? "Update Promo" : "Tambah Promo"}
@@ -256,34 +316,19 @@ const TriggerMarketing = () => {
             <p className="text-sm italic text-gray-500">Belum ada promo musiman.</p>
           ) : (
             promos.map((p) => (
-              <div key={p.id} className="border border-green-200 bg-green-50 rounded p-4 mb-3 shadow-sm">
-                <p className="font-semibold text-green-800">{p.title}</p>
+              <div
+                key={p.id}
+                className="border rounded p-4 mb-3 shadow-sm"
+                style={{ backgroundColor: p.warna || "#F0FDF4", borderColor: p.warna || "#BBF7D0" }}
+              >
+                <p className="font-semibold" style={{ color: p.warna || "#166534" }}>{p.title}</p>
                 <p className="text-sm text-gray-600">
                   {new Date(p.start).toLocaleDateString()} - {new Date(p.end).toLocaleDateString()}
                 </p>
+                <p className="text-sm italic text-gray-500">Kategori: {p.kategori || "umum"}</p>
                 <div className="text-sm mt-2 space-x-2">
                   <button onClick={() => handlePromoEdit(p)} className="text-blue-600 hover:underline">Edit</button>
                   <button onClick={() => handlePromoDelete(p.id)} className="text-red-600 hover:underline">Hapus</button>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-
-        {/* List Konten Promosi */}
-        <div className="space-y-4 mt-10">
-          {filteredPosts.length === 0 ? (
-            <p className="text-sm italic text-gray-500">Belum ada konten.</p>
-          ) : (
-            filteredPosts.map((p) => (
-              <div key={p.id} className="border border-orange-200 p-4 rounded bg-orange-50 shadow-sm">
-                <p className="font-semibold text-orange-900">
-                  {new Date(p.schedule).toLocaleString()} {p.is_draft && <span className="text-sm italic text-gray-500">(Draft)</span>}
-                </p>
-                <p className="mt-2 text-gray-700">{p.content}</p>
-                <div className="mt-2 space-x-2 text-sm">
-                  <button onClick={() => handleEdit(p)} className="text-blue-600 hover:underline">Edit</button>
-                  <button onClick={() => handleDelete(p.id)} className="text-red-600 hover:underline">Hapus</button>
                 </div>
               </div>
             ))
