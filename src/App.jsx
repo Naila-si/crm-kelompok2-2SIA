@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Profiler } from 'react';
 
 import Dashboard from './pages/Admin/Dashboard';
 import MainLayout from './components/Admin/MainLayout';
@@ -29,7 +29,8 @@ import CustomerChat from './pages/User/CustomerChat';
 import AdminMenuUnggulan from './pages/Admin/AdminMenuunggulan';
 import Promo from './pages/User/Promo';
 import AdminTestimoni from './pages/Admin/AdminTestimoni';
-import Profil from './components/User/profil';
+import Profil from "./components/User/Profil";
+
 function App() {
   const [orders, setOrders] = useState([]);
   const [user, setUser] = useState(null);
