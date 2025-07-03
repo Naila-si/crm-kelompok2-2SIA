@@ -56,6 +56,12 @@ const Navbar = () => {
                 >
                   Sign Out
                 </button>
+                <button
+                  onClick={() => navigate("/rewards")}
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-100"
+                >
+                  Poin & Rewards
+                </button>
               </div>
             )}
           </div>

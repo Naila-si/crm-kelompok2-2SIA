@@ -30,6 +30,7 @@ import AdminMenuUnggulan from './pages/Admin/AdminMenuunggulan';
 import Promo from './pages/User/Promo';
 import AdminTestimoni from './pages/Admin/AdminTestimoni';
 import Profil from "./components/User/Profil";
+import RewardsPage from './pages/User/rewards';
 
 function App() {
   const [orders, setOrders] = useState([]);
@@ -81,6 +82,7 @@ function App() {
           <Route path="/support" element={<CustomerChat />} />
           <Route path="/promo" element={<Promo />} />
           <Route path="/profil" element={<Profil />} />
+          <Route path="/rewards" element={<RewardsPage />} />
         </>
       )}
     </Routes>
