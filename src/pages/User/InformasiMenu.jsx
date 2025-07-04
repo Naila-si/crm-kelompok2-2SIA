@@ -38,13 +38,29 @@ const InformasiMenu = () => {
     fetchMenus();
   }, []);
 
+  useEffect(() => {
+    const storedCart = JSON.parse(sessionStorage.getItem("cart")) || [];
+    setCart(storedCart);
+  }, []);
+
+  const [activePromo, setActivePromo] = useState(null);
+
+  useEffect(() => {
+    const promo = JSON.parse(localStorage.getItem("promo_aktif"));
+    if (promo) setActivePromo(promo);
+  }, []);
+
+
   const filteredMenu = menuList.filter((menu) =>
     (selectedCategory === "Semua" || menu.category === selectedCategory) &&
     menu.type === selectedType
   );
 
   const addToCart = (menuItem) => {
-    setCart([...cart, menuItem]);
+    const existingCart = JSON.parse(sessionStorage.getItem("cart")) || [];
+    const updatedCart = [...existingCart, { ...menuItem, qty: 1 }];
+    sessionStorage.setItem("cart", JSON.stringify(updatedCart));
+    setCart(updatedCart);
   };
 
   return (
@@ -52,14 +68,13 @@ const InformasiMenu = () => {
       <UserLayout>
         {/* Hero */}
         <section
-          className="h-[80vh] bg-cover bg-center flex items-center justify-center text-white text-center px-4"
+          className="h-[50vh] bg-cover bg-center flex items-center justify-center text-white text-center px-4"
           style={{
             backgroundImage:
               "url('https://s1-id.alongwalker.co/wp-content/uploads/2024/07/image-top-10-pilihan-catering-di-pekanbaru-riau-buat-acara-maupun-harian-manakah-yang-paling-enak-dan-murah-62258e4294ff1f402c284956a551228f.jpg')",
           }}
         >
           <div className="bg-black/60 p-10 rounded-2xl max-w-xl shadow-xl">
-            <img src="/logo.png" alt="Logo" className="mx-auto mb-4 h-20" />
             <h1 className="text-4xl font-extrabold">Informasi Menu</h1>
             <p className="mt-2 text-lg font-medium">
               Temukan semua menu favorit pelanggan – lengkap dengan harga & deskripsi.
@@ -142,6 +157,11 @@ const InformasiMenu = () => {
               <p className="mb-4 text-lg font-medium text-[#5D3A1A]">
                 Total item di keranjang: {cart.length}
               </p>
+              {activePromo && (
+                <div className="mb-4 text-sm text-green-700 bg-green-100 px-4 py-2 rounded-full inline-block">
+                  Promo aktif: <strong>{activePromo.kode}</strong> - Potongan {activePromo.diskon}%
+                </div>
+              )}
               <button
                 onClick={() => navigate('/checkout')}
                 className="bg-orange-600 text-white px-6 py-3 rounded-full hover:bg-orange-700 transition"

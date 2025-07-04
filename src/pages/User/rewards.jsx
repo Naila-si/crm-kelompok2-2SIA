@@ -5,44 +5,43 @@ import confetti from "canvas-confetti";
 
 const rewards = [
   {
-    level: "Selera Babe (Bronze)",
+    level: "Sahabat Selera",
+    tag: "bronze",
     color: "bg-orange-100",
     border: "border-orange-300",
-    requirement: "10 Pesanan atau Rp 500.000",
+    requirement: "Minimal 3 Transaksi",
     benefits: [
-      "Diskon 5% semua menu",
-      "Voucher Ulang Tahun Rp 10.000",
-      "Akses Promo mingguan",
-      "Customer Support prioritas",
+      "Diskon 5% untuk semua menu",
+      "Voucher Pelanggan Baru Rp 10.000",
     ],
   },
   {
-    level: "Selera Star (Silver)",
+    level: "Keluarga Selera",
+    tag: "silver",
     color: "bg-purple-100",
     border: "border-purple-300",
-    requirement: "15 Pesanan atau Rp 1.200.000",
+    requirement: "Minimal 5 Transaksi",
     benefits: [
       "Diskon 10% semua menu",
-      "Voucher Ulang Tahun Rp 15.000",
-      "Akses Promo mingguan & spesial",
-      "Cashback Rp 5.000 setiap 5 pesanan",
-      "Undangan event spesial Selera Kampung",
+      "Gratis Ongkir 1x",
+      "Akses Promo musiman",
     ],
   },
   {
-    level: "Selera Sultan (Gold)",
+    level: "Raja Selera",
+    tag: "gold",
     color: "bg-yellow-100",
     border: "border-yellow-300",
-    requirement: "25 Pesanan atau Rp 4.500.000",
+    requirement: "Minimal 10 Transaksi",
     benefits: [
       "Diskon 15% semua kategori",
-      "Voucher Ulang Tahun Rp 25.000",
-      "Akses Promo eksklusif",
-      "Cashback Rp 10.000 setiap 5 pesanan",
-      "Prioritas Event & undangan VIP",
+      "Langganan Aktif",
+      "Prioritas Pesanan",
+      "Undangan Acara Spesial",
     ],
   },
 ];
+
 
 const dummyHistory = [
   { date: "03 Juli 2025", activity: "Klaim Poin Harian", point: "+10" },
@@ -62,6 +61,7 @@ export default function RewardsPage() {
   const [points, setPoints] = useState(100);
   const [showConfetti, setShowConfetti] = useState(false);
   const navigate = useNavigate();
+  const userLevelData = rewards.find((r) => r.tag === user?.level);
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -83,6 +83,19 @@ export default function RewardsPage() {
     }
   };
 
+  const getEmoji = (levelTag) => {
+    switch (levelTag) {
+      case "bronze":
+        return "🥉";
+      case "silver":
+        return "🥈";
+      case "gold":
+        return "🥇";
+      default:
+        return "❔";
+    }
+  };
+
   useEffect(() => {
     if (points >= 120 && !showConfetti) {
       confetti({ particleCount: 200, spread: 100 });
@@ -93,40 +106,52 @@ export default function RewardsPage() {
   return (
     <div className="font-sans text-gray-800 bg-[#fff8f0]">
       <UserLayout>
-        <section className="h-[60vh] bg-orange-100 flex flex-col justify-center items-center text-center px-4">
-          <h1 className="text-4xl font-extrabold text-orange-700 mb-2">Selamat Datang di Halaman Rewards</h1>
-          <p className="text-gray-700 max-w-xl">Kumpulkan poin dari setiap aktivitas dan dapatkan berbagai keuntungan eksklusif dari Selera Kampung!</p>
-          <button
-            onClick={() => navigate("/beranda")}
-            className="mt-4 bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full"
-          >
-            ⬅ Kembali ke Beranda
-          </button>
+        <section
+          className="h-[50vh] bg-cover bg-center flex items-center justify-center text-white text-center px-4"
+          style={{
+            backgroundImage:
+              "url('https://s1-id.alongwalker.co/wp-content/uploads/2024/07/image-top-10-pilihan-catering-di-pekanbaru-riau-buat-acara-maupun-harian-manakah-yang-paling-enak-dan-murah-62258e4294ff1f402c284956a551228f.jpg')",
+          }}
+        >
+        <div className="bg-black/60 p-8 rounded-xl">
+            <h1 className="text-4xl font-extrabold text-white-700 mb-2">Selamat Datang di Halaman Rewards</h1>
+            <p className="text-white-700 max-w-xl">Kumpulkan poin dari setiap aktivitas dan dapatkan berbagai keuntungan eksklusif dari Selera Kampung!</p>
+          </div>
         </section>
 
-        <section className="py-10 px-6 text-center bg-gradient-to-br from-orange-200 via-white to-yellow-100">
-          <div className="inline-block bg-white px-8 py-6 rounded-2xl border border-orange-300 shadow-lg">
-            <p className="text-sm">Level kamu saat ini:</p>
-            <h2 className="text-xl font-bold text-orange-600">Selera Star (Silver)</h2>
-            <p className="mt-2 text-sm text-gray-600">Poin kamu: <strong>{points}</strong></p>
-          </div>
+        <section className="py-16 px-6 bg-gradient-to-br from-orange-200 via-white to-yellow-100">
+          <div className="max-w-3xl mx-auto grid gap-8 md:grid-cols-2 items-center text-center md:text-left">
+            {/* Card Level */}
+            <div className={`bg-white rounded-2xl p-6 shadow-lg border-l-8 ${userLevelData?.border || "border-gray-300"}`}>
+              <p className="text-sm text-gray-500 mb-1">Level Kamu Saat Ini</p>
+              <h2 className="text-2xl font-bold text-orange-600 flex items-center gap-2">
+                {getEmoji(user?.level)} {userLevelData?.level || "Belum Ada"}
+              </h2>
+              <p className="mt-3 text-gray-600 text-sm">
+                Poin kamu saat ini: <span className="font-bold text-green-600">{points}</span>
+              </p>
+            </div>
 
-          <div className="mt-6">
-            <button
-              onClick={handleClaim}
-              disabled={claimed}
-              className={`px-6 py-2 rounded-full text-white font-medium transition ${
-                claimed ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
-              }`}
-            >
-              {claimed ? "Poin Harian Sudah Diklaim" : "🎁 Klaim Poin Harian"}
-            </button>
+            {/* Klaim Poin */}
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-300">
+              <h3 className="text-lg font-semibold text-green-700 mb-2">🎁 Klaim Poin Harian</h3>
+              <p className="text-sm text-gray-600 mb-4">Dapatkan 10 poin gratis setiap hari!</p>
+              <button
+                onClick={handleClaim}
+                disabled={claimed}
+                className={`w-full px-6 py-3 rounded-full text-white font-semibold transition ${
+                  claimed ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+                }`}
+              >
+                {claimed ? "Poin Harian Sudah Diklaim" : "Klaim Sekarang"}
+              </button>
+            </div>
           </div>
         </section>
 
         <section className="py-16 px-6 bg-white">
           <h2 className="text-3xl font-bold text-center text-orange-700 mb-8">Tingkatan & Keuntungan Member</h2>
-          <div className="flex overflow-x-auto gap-6 pb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {rewards.map((tier, idx) => (
               <div
                 key={idx}

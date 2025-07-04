@@ -22,7 +22,7 @@ const Navbar = () => {
           {[
             { label: "Beranda", path: "/" },
             { label: "Tentang Kami", path: "/tentang-kami" },
-            { label: "Menu", path: "/informasi-menu" },
+            { label: "Menu", path: "/menu" },
             { label: "Promo", path: "/promo" },
           ].map((item, i) => (
             <button key={i} onClick={() => navigate(item.path)} className="hover:text-[#9C2D2D] transition">
@@ -48,19 +48,31 @@ const Navbar = () => {
                   Profil Saya
                 </button>
                 <button
-                  onClick={() => {
-                    localStorage.removeItem("user");
-                    navigate("/signin");
-                  }}
-                  className="block w-full text-left px-4 py-2 hover:bg-orange-100 text-red-600"
-                >
-                  Sign Out
-                </button>
-                <button
                   onClick={() => navigate("/rewards")}
                   className="block w-full text-left px-4 py-2 hover:bg-orange-100"
                 >
                   Poin & Rewards
+                </button>
+                <button
+                  onClick={() => navigate("/faq")}
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-100"
+                >
+                  FAQ
+                </button>
+                <button
+                  onClick={() => navigate("/riwayat")}
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-100"
+                >
+                  Riwayat Pesanan
+                </button>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("user");
+                    navigate("/signin");
+                  }}
+                  className="block w-full text-left px-4 py-2 hover:bg-orange-100"
+                >
+                  Sign Out
                 </button>
               </div>
             )}

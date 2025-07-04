@@ -30,7 +30,7 @@ const TentangKami = () => {
     <div className="font-sans text-gray-800 bg-[#fff8f0]">
       <UserLayout>
         {/* Hero Section */}
-        <section className="h-[60vh] bg-cover bg-center flex items-center justify-center text-white text-center px-4"
+        <section className="h-[50vh] bg-cover bg-center flex items-center justify-center text-white text-center px-4"
           style={{ backgroundImage: "url('https://s1-id.alongwalker.co/wp-content/uploads/2024/07/image-top-10-pilihan-catering-di-pekanbaru-riau-buat-acara-maupun-harian-manakah-yang-paling-enak-dan-murah-62258e4294ff1f402c284956a551228f.jpg'" }}>
           <div className="bg-black/60 p-10 rounded-2xl max-w-2xl shadow-xl">
             <h1 className="text-4xl font-extrabold mb-2">Tentang Kami</h1>

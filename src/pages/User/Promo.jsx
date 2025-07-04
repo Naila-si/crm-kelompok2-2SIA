@@ -48,9 +48,16 @@ const Promo = () => {
   };
 
   const handleGunakanPromo = (promo) => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    
+    if (cart.length === 0) {
+      alert("⚠️ Kamu belum menambahkan item ke pesanan. Silakan pilih menu terlebih dahulu.");
+      return;
+    }
+
     localStorage.setItem("promo_aktif", JSON.stringify(promo));
-    alert("Promo diterapkan! Kamu bisa gunakan saat melakukan pemesanan.");
-    navigate("/order-management");
+    alert("✅ Promo diterapkan! Kamu akan diarahkan ke halaman pemesanan.");
+    navigate("/checkout");
   };
 
   const categories = ["Semua", "Bronze", "Silver", "Gold"];

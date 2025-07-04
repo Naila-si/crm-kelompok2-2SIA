@@ -31,6 +31,8 @@ import Promo from './pages/User/Promo';
 import AdminTestimoni from './pages/Admin/AdminTestimoni';
 import Profil from "./components/User/Profil";
 import RewardsPage from './pages/User/rewards';
+import FaqUser from './pages/User/FaqUser';
+import OrderHistory from './pages/User/OrderHistory';
 
 function App() {
   const [orders, setOrders] = useState([]);
@@ -75,14 +77,16 @@ function App() {
       {user && user.role === "user" && (
         <>
           <Route path="/beranda" element={<Beranda />} />
-          <Route path="/informasi-menu" element={<InformasiMenu />} />
-          <Route path="/order-management" element={<OrderManagement />} />
+          <Route path="/menu" element={<InformasiMenu />} />
+          <Route path="/checkout" element={<OrderManagement />} />
           <Route path="/tracking" element={<TrackingDelivery />} />
           <Route path="/tentang-kami" element={<TentangKami />} />
           <Route path="/support" element={<CustomerChat />} />
           <Route path="/promo" element={<Promo />} />
           <Route path="/profil" element={<Profil />} />
           <Route path="/rewards" element={<RewardsPage />} />
+          <Route path="/faq" element={<FaqUser />} />
+          <Route path="/riwayat" element={<OrderHistory />} />
         </>
       )}
     </Routes>

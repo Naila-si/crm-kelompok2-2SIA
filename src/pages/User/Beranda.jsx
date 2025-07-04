@@ -81,14 +81,13 @@ const Beranda = () => {
       <UserLayout>
         {/* Hero Section */}
         <section
-          className="h-[85vh] bg-cover bg-center flex items-center justify-center text-white text-center px-4"
+          className="h-[50vh] bg-cover bg-center flex items-center justify-center text-white text-center px-4"
           style={{
             backgroundImage:
               "url('https://s1-id.alongwalker.co/wp-content/uploads/2024/07/image-top-10-pilihan-catering-di-pekanbaru-riau-buat-acara-maupun-harian-manakah-yang-paling-enak-dan-murah-62258e4294ff1f402c284956a551228f.jpg')",
           }}
         >
           <div className="bg-black/60 p-10 rounded-2xl max-w-xl shadow-xl">
-            <img src="/logo.png" alt="Logo" className="mx-auto mb-4 h-20" />
             <h1 className="text-4xl font-extrabold">Food Catering Service</h1>
             <p className="mt-2 text-lg font-medium">Nikmati layanan catering sesuai kebutuhanmu!</p>
             <button

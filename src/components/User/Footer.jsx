@@ -50,7 +50,7 @@ const Footer = () => {
           </ul>
         </div>
         <div>
-          <h4 className="text-xl font-semibold mb-4">FAQ / Contact</h4>
+          <h4 className="text-xl font-semibold mb-4">Adakah Pertanyaan?</h4>
           <form onSubmit={handleFaqSubmit} className="flex flex-col space-y-3">
             <input
               type="text"
