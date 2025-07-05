@@ -77,7 +77,7 @@ const Sidebar = () => {
       {/* Logo */}
       <div className="flex justify-center items-center mb-4">
         <img
-          src="/public/logo.png"
+          src="/logo.png"
           alt="Logo Selera Kampung"
           className="w-40 h-auto object-contain"
         />
