@@ -65,7 +65,6 @@ const InformasiMenu = () => {
 
   return (
     <div className="font-sans text-[#5D3A1A] bg-[#F8F4E3]">
-      <UserLayout>
         {/* Hero */}
         <section
           className="h-[50vh] bg-cover bg-center flex items-center justify-center text-white text-center px-4"
@@ -172,7 +171,6 @@ const InformasiMenu = () => {
           )}
         </section>
         <Testimoni testimoni={testimoni} />
-      </UserLayout>
     </div>
   );
 };

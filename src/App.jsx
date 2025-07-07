@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useState, useEffect, Profiler } from 'react';
+import { useState, useEffect } from 'react';
 
 import Dashboard from './pages/Admin/Dashboard';
 import MainLayout from './components/Admin/MainLayout';
@@ -34,16 +34,24 @@ import RewardsPage from './pages/User/rewards';
 import FaqUser from './pages/User/FaqUser';
 import OrderHistory from './pages/User/OrderHistory';
 
+import UserLayout from './components/User/UserLayout';
+
 function App() {
   const [orders, setOrders] = useState([]);
   const [user, setUser] = useState(null);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    setIsLoadingUser(false);
   }, []);
+
+  if (isLoadingUser) {
+    return <div className="p-6">Loading...</div>;
+  }
 
   return (
     <Routes key={user?.email || "guest"}>
@@ -51,7 +59,7 @@ function App() {
       <Route path="/signin" element={<Login setUser={setUser} />} />
       <Route path="/register" element={<Register />} />
 
-      {/* Admin */}
+      {/* Admin routes */}
       {user && user.role === "admin" && (
         <Route element={<MainLayout />}>
           <Route path="/dashboard" element={<Dashboard orders={orders} />} />
@@ -73,9 +81,10 @@ function App() {
         </Route>
       )}
 
-      {/* User */}
+      {/* User routes */}
       {user && user.role === "user" && (
-        <>
+        <Route element={<UserLayout />}>
+          <Route index element={<Navigate to="/beranda" />} />
           <Route path="/beranda" element={<Beranda />} />
           <Route path="/menu" element={<InformasiMenu />} />
           <Route path="/checkout" element={<OrderManagement />} />
@@ -87,7 +96,7 @@ function App() {
           <Route path="/rewards" element={<RewardsPage />} />
           <Route path="/faq" element={<FaqUser />} />
           <Route path="/riwayat" element={<OrderHistory />} />
-        </>
+        </Route>
       )}
     </Routes>
   );

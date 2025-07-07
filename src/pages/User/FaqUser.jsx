@@ -56,7 +56,7 @@ const FaqUser = () => {
   };
 
   return (
-    <UserLayout>
+    <>
        <section
             className="h-[50vh] bg-cover bg-center flex items-center justify-center text-white text-center px-4"
             style={{
@@ -137,7 +137,7 @@ const FaqUser = () => {
           </div>
         </div>
       </div>
-    </UserLayout>
+    </>
   );
 };
 

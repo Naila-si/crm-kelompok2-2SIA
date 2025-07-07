@@ -77,7 +77,7 @@ const Promo = () => {
   const filteredSeasonal = filterPromos(seasonalPromos);
 
   return (
-    <UserLayout>
+    <>
       {/* 🔶 Header with background image */}
       <section
         className="h-[50vh] bg-cover bg-center flex items-center justify-center text-white text-center px-4"
@@ -182,7 +182,7 @@ const Promo = () => {
           )}
         </div>
       </div>
-    </UserLayout>
+    </>
   );
 };
 

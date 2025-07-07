@@ -73,9 +73,13 @@ const Login = () => {
     localStorage.setItem("user", JSON.stringify(userWithoutPassword));
 
     if (userWithoutPassword.role === "admin") {
-      navigate("/dashboard");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 100); // beri delay 100ms agar localStorage siap
     } else {
-      navigate("/beranda");
+      setTimeout(() => {
+        navigate("/beranda");
+      }, 100);
     }
   };
 

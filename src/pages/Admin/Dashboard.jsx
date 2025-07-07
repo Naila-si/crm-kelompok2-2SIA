@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -27,13 +27,18 @@ ChartJS.register(
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || user.role !== "admin") {
       navigate("/login", { replace: true });
+    } else {
+      setIsChecking(false);
     }
   }, [navigate]);
+
+  if (isChecking) return <div className="p-6">Loading...</div>;
 
   const stats = [
     {

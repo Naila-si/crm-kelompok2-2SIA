@@ -105,7 +105,7 @@ export default function RewardsPage() {
 
   return (
     <div className="font-sans text-gray-800 bg-[#fff8f0]">
-      <UserLayout>
+      <>
         <section
           className="h-[50vh] bg-cover bg-center flex items-center justify-center text-white text-center px-4"
           style={{
@@ -227,7 +227,7 @@ export default function RewardsPage() {
             </table>
           </div>
         </section>
-      </UserLayout>
+      </>
     </div>
   );
 }
