@@ -56,51 +56,53 @@ const AdminTestimoni = () => {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold text-orange-700 mb-6">Kelola Testimoni Pelanggan</h1>
+    <div className="p-6 bg-[#FDF6E3] min-h-screen">
+      <div className="p-6 max-w-3xl mx-auto">
+        <h1 className="text-2xl font-bold text-orange-700 mb-6">Kelola Testimoni Pelanggan</h1>
 
-      {/* Form Input */}
-      <form onSubmit={handleSubmit} className="space-y-4 mb-10 bg-white p-6 rounded shadow">
-        <input
-          type="text"
-          placeholder="Nama Pelanggan"
-          value={form.nama}
-          onChange={(e) => setForm({ ...form, nama: e.target.value })}
-          className="w-full border border-gray-300 px-4 py-2 rounded"
-        />
-        <textarea
-          placeholder="Pesan Testimoni"
-          value={form.pesan}
-          onChange={(e) => setForm({ ...form, pesan: e.target.value })}
-          className="w-full border border-gray-300 px-4 py-2 rounded"
-        ></textarea>
-        <button
-          type="submit"
-          className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700"
-        >
-          {form.id ? "Update Testimoni" : "Tambah Testimoni"}
-        </button>
-      </form>
+        {/* Form Input */}
+        <form onSubmit={handleSubmit} className="space-y-4 mb-10 bg-white p-6 rounded shadow">
+          <input
+            type="text"
+            placeholder="Nama Pelanggan"
+            value={form.nama}
+            onChange={(e) => setForm({ ...form, nama: e.target.value })}
+            className="w-full border border-gray-300 px-4 py-2 rounded"
+          />
+          <textarea
+            placeholder="Pesan Testimoni"
+            value={form.pesan}
+            onChange={(e) => setForm({ ...form, pesan: e.target.value })}
+            className="w-full border border-gray-300 px-4 py-2 rounded"
+          ></textarea>
+          <button
+            type="submit"
+            className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700"
+          >
+            {form.id ? "Update Testimoni" : "Tambah Testimoni"}
+          </button>
+        </form>
 
-      {/* List Testimoni */}
-      <div className="space-y-4">
-        {testimoni.length === 0 ? (
-          <p className="italic text-gray-500">Belum ada testimoni.</p>
-        ) : (
-          testimoni.map((item) => (
-            <div
-              key={item.id}
-              className="bg-orange-50 border-l-4 border-orange-400 p-4 rounded shadow"
-            >
-              <p className="text-sm font-bold text-orange-800">{item.nama}</p>
-              <p className="text-gray-700 mt-1">{item.pesan}</p>
-              <div className="text-sm mt-2 space-x-2">
-                <button onClick={() => handleEdit(item)} className="text-blue-600 hover:underline">Edit</button>
-                <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:underline">Hapus</button>
+        {/* List Testimoni */}
+        <div className="space-y-4">
+          {testimoni.length === 0 ? (
+            <p className="italic text-gray-500">Belum ada testimoni.</p>
+          ) : (
+            testimoni.map((item) => (
+              <div
+                key={item.id}
+                className="bg-orange-50 border-l-4 border-orange-400 p-4 rounded shadow"
+              >
+                <p className="text-sm font-bold text-orange-800">{item.nama}</p>
+                <p className="text-gray-700 mt-1">{item.pesan}</p>
+                <div className="text-sm mt-2 space-x-2">
+                  <button onClick={() => handleEdit(item)} className="text-blue-600 hover:underline">Edit</button>
+                  <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:underline">Hapus</button>
+                </div>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

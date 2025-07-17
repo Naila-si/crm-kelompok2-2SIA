@@ -20,7 +20,7 @@ const Navbar = () => {
         </div>
         <nav className="flex gap-6 text-sm font-semibold text-[#5D3A1A]">
           {[
-            { label: "Beranda", path: "/" },
+            { label: "Beranda", path: "/beranda" },
             { label: "Tentang Kami", path: "/tentang-kami" },
             { label: "Menu", path: "/menu" },
             { label: "Promo", path: "/promo" },

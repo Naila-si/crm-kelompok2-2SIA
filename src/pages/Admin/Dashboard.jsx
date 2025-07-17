@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import * as XLSX from "xlsx";
 
 import {
   Chart as ChartJS,
@@ -27,57 +28,93 @@ ChartJS.register(
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [isChecking, setIsChecking] = useState(true);
+  const [barData, setBarData] = useState({ labels: [], datasets: [] });
+  const [pendapatanData, setPendapatanData] = useState({ labels: [], datasets: [] });
+  const [totalPesananBulanIni, setTotalPesananBulanIni] = useState(0);
+  const [totalPendapatanBulanIni, setTotalPendapatanBulanIni] = useState(0);
+
+  function parseTanggal(tanggal) {
+    if (!tanggal) return null;
+    if (!isNaN(tanggal)) {
+      return new Date((tanggal - 25569) * 86400 * 1000);
+    }
+    if (typeof tanggal === "string") {
+      const parts = tanggal.split(/[\/\-]/);
+      if (parts.length === 3) {
+        const [dd, mm, yyyy] = parts;
+        return new Date(parseInt(yyyy), parseInt(mm) - 1, parseInt(dd));
+      }
+    }
+    return null;
+  }
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || user.role !== "admin") {
       navigate("/login", { replace: true });
-    } else {
-      setIsChecking(false);
     }
   }, [navigate]);
 
-  if (isChecking) return <div className="p-6">Loading...</div>;
+  useEffect(() => {
+    fetch("/dataset_pemesanan_kotor.xlsx")
+      .then((res) => res.arrayBuffer())
+      .then((buffer) => {
+        const workbook = XLSX.read(buffer, { type: "array" });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const json = XLSX.utils.sheet_to_json(sheet);
 
-  const stats = [
-    {
-      label: "Pesanan Hari Ini",
-      value: "128",
-      percent: "+15%",
-      color: "bg-[#D7B85B] text-[#1F1F1F]",
-    },
-    {
-      label: "Pendapatan Hari Ini",
-      value: "Rp 3.500.000",
-      percent: "+12%",
-      color: "bg-[#A02B2B] text-white",
-    },
-    {
-      label: "Pelanggan Baru",
-      value: "23",
-      percent: "+5%",
-      color: "bg-[#5E3B1E] text-white",
-    },
-    {
-      label: "Menu Terjual",
-      value: "412",
-      percent: "+9%",
-      color: "bg-[#EEE2C0] text-[#1F1F1F]",
-    },
-  ];
+        const bulanMap = Array(12).fill(0);
+        const pendapatanMap = Array(12).fill(0);
+        const bulanSekarang = new Date().getMonth();
+        let pendapatanBulanIni = 0;
+        let pesananBulanIni = 0;
 
-  const barData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
-    datasets: [
-      {
-        label: "Jumlah Pesanan",
-        data: [240, 320, 400, 420, 500, 620, 710, 780, 860, 930, 1000, 1120],
-        backgroundColor: "#A02B2B",
-        borderRadius: 6,
-      },
-    ],
-  };
+        json.forEach((item) => {
+          const tgl = parseTanggal(item.tanggal_pengantaran);
+          if (tgl) {
+            const bulan = tgl.getMonth();
+            bulanMap[bulan]++;
+            pendapatanMap[bulan] += parseInt(item.total_pembayaran || 0);
+
+            if (bulan === bulanSekarang) {
+              pesananBulanIni++;
+              pendapatanBulanIni += parseInt(item.total_pembayaran || 0);
+            }
+          }
+        });
+
+        setBarData({
+          labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
+          datasets: [
+            {
+              label: "Jumlah Pesanan",
+              data: bulanMap,
+              backgroundColor: "#A02B2B",
+              borderRadius: 6,
+            },
+          ],
+        });
+
+        setPendapatanData({
+          labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
+          datasets: [
+            {
+              label: "Pendapatan (Rp)",
+              data: pendapatanMap,
+              borderColor: "#5E3B1E",
+              backgroundColor: "rgba(94,59,30,0.2)",
+              tension: 0.4,
+              fill: true,
+              pointRadius: 4,
+              pointBackgroundColor: "#5E3B1E",
+            },
+          ],
+        });
+
+        setTotalPesananBulanIni(pesananBulanIni);
+        setTotalPendapatanBulanIni(pendapatanBulanIni);
+      });
+  }, []);
 
   const barOptions = {
     responsive: true,
@@ -85,7 +122,7 @@ const Dashboard = () => {
       legend: { position: "top" },
       title: {
         display: true,
-        text: "Jumlah Pesanan per Bulan",
+        text: "Jumlah Pesanan per Bulan (2025)",
         font: { size: 16, weight: "bold" },
         color: "#1F1F1F",
       },
@@ -93,29 +130,13 @@ const Dashboard = () => {
     maintainAspectRatio: false,
   };
 
-  const lineData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
-    datasets: [
-      {
-        label: "Jumlah Pelanggan",
-        data: [120, 150, 180, 220, 250, 300, 360, 400, 430, 470, 520, 580],
-        borderColor: "#5E3B1E",
-        backgroundColor: "rgba(94, 59, 30, 0.2)",
-        fill: true,
-        tension: 0.4,
-        pointRadius: 4,
-        pointBackgroundColor: "#5E3B1E",
-      },
-    ],
-  };
-
-  const lineOptions = {
+  const pendapatanOptions = {
     responsive: true,
     plugins: {
       legend: { position: "top" },
       title: {
         display: true,
-        text: "Pertumbuhan Pelanggan Tahun Ini",
+        text: "Pendapatan per Bulan (2025)",
         font: { size: 16, weight: "bold" },
         color: "#1F1F1F",
       },
@@ -129,28 +150,27 @@ const Dashboard = () => {
         Dashboard Selera Kampung
       </div>
 
-      {/* Statistik */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((stat, index) => (
-          <div key={index} className={`rounded-xl shadow p-5 ${stat.color}`}>
-            <p className="text-sm font-semibold">{stat.label}</p>
-            <div className="flex items-center justify-between mt-2">
-              <h2 className="text-xl font-bold">{stat.value}</h2>
-              <span className="text-xs bg-white/70 px-2 py-0.5 rounded font-semibold">
-                {stat.percent}
-              </span>
-            </div>
-          </div>
-        ))}
+      {/* Card baru */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="rounded-xl shadow p-5 bg-[#D7B85B] text-[#1F1F1F]">
+          <p className="text-sm font-semibold">Total Pesanan Bulan Ini</p>
+          <h2 className="text-2xl font-bold mt-2">{totalPesananBulanIni}</h2>
+        </div>
+        <div className="rounded-xl shadow p-5 bg-[#A02B2B] text-white">
+          <p className="text-sm font-semibold">Total Pendapatan Bulan Ini</p>
+          <h2 className="text-2xl font-bold mt-2">
+            Rp {totalPendapatanBulanIni.toLocaleString("id-ID")}
+          </h2>
+        </div>
       </div>
 
-      {/* Grafik sejajar kanan */}
-      <div className="flex flex-col lg:flex-row justify-end gap-6">
-        <div className="bg-white rounded-xl shadow p-4 h-[300px] w-full lg:w-1/2">
+      {/* 2 Grafik */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-xl shadow p-4 h-[300px]">
           <Bar options={barOptions} data={barData} />
         </div>
-        <div className="bg-white rounded-xl shadow p-4 h-[300px] w-full lg:w-1/2">
-          <Line options={lineOptions} data={lineData} />
+        <div className="bg-white rounded-xl shadow p-4 h-[300px]">
+          <Line options={pendapatanOptions} data={pendapatanData} />
         </div>
       </div>
     </div>

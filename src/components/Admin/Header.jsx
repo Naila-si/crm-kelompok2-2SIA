@@ -38,6 +38,12 @@ const sections = [
       { name: "Pengingat", path: "/activity" },
     ],
   },
+  {
+      title: "PREDIKSI",
+      items: [
+        { name: "Rekomendasi Promo", path: "/loyalty-prediksi" },
+      ],
+    },
 ];
 
 const Header = () => {
