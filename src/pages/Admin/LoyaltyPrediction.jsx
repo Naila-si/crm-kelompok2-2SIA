@@ -88,7 +88,7 @@ const LoyaltyPrediction = () => {
     e.preventDefault();
     localStorage.removeItem("prediksiData");
 
-    const res = await fetch("http://127.0.0.1:5000/prediksi", {
+    const res = await fetch("https://da73d5033893.ngrok-free.app/prediksi", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
