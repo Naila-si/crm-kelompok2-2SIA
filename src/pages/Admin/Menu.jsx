@@ -369,7 +369,7 @@ export default function Menu() {
           </div>
         </form>
 
-{/* Filter */}
+        {/* Filter */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
           <div className="relative w-full md:w-1/2">
             <Search className="absolute left-3 top-2.5 text-gray-400" />

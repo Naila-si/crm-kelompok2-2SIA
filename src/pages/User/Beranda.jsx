@@ -148,37 +148,25 @@ const Beranda = () => {
               Kami menyediakan layanan cepat dan informatif seputar menu, harga, dan pemesanan,
               agar pelanggan dapat mengambil keputusan dengan mudah dan nyaman.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {[
                 {
                   icon: "📦",
                   title: "Order Management",
                   desc: "Pantau riwayat dan status pesanan Anda.",
-                  action: () => navigate("/order-management"),
+                  action: () => navigate("/riwayat"),
                 },
                 {
                   icon: "📋",
                   title: "Informasi Menu",
                   desc: "Lihat daftar menu lengkap dengan harga.",
-                  action: () => navigate("/informasi-menu"),
-                },
-                {
-                  icon: "📍",
-                  title: "Tracking Delivery",
-                  desc: "Lacak status pengiriman secara real-time.",
-                  action: () => navigate("/tracking"),
+                  action: () => navigate("/menu"),
                 },
                 {
                   icon: "💬",
                   title: "Customer Support",
                   desc: "Kami siap bantu Anda 24/7.",
-                  action: () => navigate("/support"),
-                },
-                {
-                  icon: "🧑‍🍳",
-                  title: "Konsultasi Catering",
-                  desc: "Bantu pilih menu terbaik sesuai acara Anda.",
-                  action: () => navigate("/konsultasi"),
+                  action: () => navigate("/faq"),
                 },
                 {
                   icon: "📢",

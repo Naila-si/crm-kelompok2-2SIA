@@ -27,11 +27,35 @@ const InformasiMenu = () => {
 
   useEffect(() => {
     const fetchMenus = async () => {
-      const { data, error } = await supabase.from("menus").select("*");
-      if (error) {
-        console.error("Gagal ambil menu:", error.message);
-      } else {
-        setMenuList(data);
+      // Ambil ala carte
+      const { data: alaCarteData, error: alaCarteError } = await supabase
+        .from("menus")
+        .select("*");
+
+      // Ambil paket
+      const { data: paketData, error: paketError } = await supabase
+        .from("pakets")
+        .select("*");
+
+      if (alaCarteError) console.error("Gagal ambil menu ala carte:", alaCarteError.message);
+      if (paketError) console.error("Gagal ambil menu paket:", paketError.message);
+
+      if (alaCarteData && paketData) {
+        // Format agar sama field-nya & tambahkan type
+        const formattedAlaCarte = alaCarteData.map((item) => ({
+          ...item,
+          type: "ala-carte",
+        }));
+
+        const formattedPaket = paketData.map((item) => ({
+          ...item,
+          type: "paket",
+          // jika pakai items array, ubah ke string (opsional, kalau mau ditampilkan)
+          items: Array.isArray(item.items) ? item.items.join(", ") : item.items,
+        }));
+
+        // Gabungkan dua data
+        setMenuList([...formattedAlaCarte, ...formattedPaket]);
       }
     };
 
@@ -166,6 +190,17 @@ const InformasiMenu = () => {
                 className="bg-orange-600 text-white px-6 py-3 rounded-full hover:bg-orange-700 transition"
               >
                 Lanjutkan Pesanan
+              </button>
+
+              {/* ✅ Tombol Ulang Pemesanan */}
+              <button
+                onClick={() => {
+                  sessionStorage.removeItem("cart");
+                  setCart([]);
+                }}
+                className="ml-4 bg-gray-300 text-gray-700 px-6 py-3 rounded-full hover:bg-gray-400 transition"
+              >
+                Ulang Pemesanan
               </button>
             </div>
           )}

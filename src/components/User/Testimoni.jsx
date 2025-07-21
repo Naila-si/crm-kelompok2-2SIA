@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
 const Testimoni = ({ testimoni }) => {
   const scrollRef = useRef();
@@ -11,9 +11,28 @@ const Testimoni = ({ testimoni }) => {
     scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
   };
 
+  // ✅ Auto-scroll effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (scrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+        if (scrollLeft + clientWidth >= scrollWidth) {
+          // Kalau sudah sampai ujung, kembali ke awal
+          scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
+        }
+      }
+    }, 3000); // pindah setiap 3 detik
+
+    return () => clearInterval(interval); // bersihkan interval saat komponen unmount
+  }, []);
+
   return (
     <section className="py-20 px-6 bg-orange-100 relative">
-      <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-10">Apa Kata Pelanggan</h2>
+      <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-10">
+        Apa Kata Pelanggan
+      </h2>
 
       {/* Scroll buttons */}
       <button
@@ -30,8 +49,20 @@ const Testimoni = ({ testimoni }) => {
       </button>
 
       {/* Scrollable testimonials */}
-      <div ref={scrollRef} className="overflow-x-auto">
-        <div className="flex gap-6 w-max px-6">
+      <div
+        ref={scrollRef}
+        className="overflow-x-auto"
+        style={{
+          scrollbarWidth: "none",       // Firefox
+          msOverflowStyle: "none",      // IE & Edge
+        }}
+      >
+        <div
+          className="flex gap-6 w-max px-6"
+          style={{
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
           {testimoni.map((fb, i) => (
             <div
               key={i}
